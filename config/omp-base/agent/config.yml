@@ -1,0 +1,74 @@
+# Конфигурация ролей Oh-My-Pi для KodikRouter
+# Примечание: OMP корректно обрабатывает модели с mandatory thinking (kimi-k2.7-code),
+# автоматически понижая tool_choice до "auto" при необходимости (PR #2547, #13248).
+# Однако из-за "налога на размышления" они используются преимущественно там,
+# где глубокий анализ оправдывает стоимость (slow, advisor), или как фолбэк для сложных задач (task).
+
+modelRoles:
+  # Основная работа: стабильность в долгих сессиях, 1.31M контекст
+  default:
+    - kodikrouter/z-ai/glm-5.3-flash
+    - kodikrouter/deepseek/deepseek-v4.1-flash
+
+  # Быстрые утилитарные read-only задачи (scout, librarian)
+  smol:
+    - kodikrouter/z-ai/glm-5.3-flash
+    - kodikrouter/qwen/qwen3.8-flash
+
+  # Глубокий анализ и ревью (reviewer, security-reviewer)
+  slow:
+    - kodikrouter/moonshotai/kimi-k2.7-code
+    - kodikrouter/qwen/qwen3.8-max
+
+  # Архитектурное планирование
+  plan:
+    - kodikrouter/z-ai/glm-5.3
+    - kodikrouter/deepseek/deepseek-v4.1-flash
+
+  # Анализ изображений, схем, документов
+  # Порядок: M3 первым (дешевле в 10 раз, сильнее в MMMU-Pro/OmniDocBench),
+  # K3 как фолбэк для сложных visual reasoning задач
+  vision:
+    - kodikrouter/minimax/minimax-m3
+    - kodikrouter/qwen/qwen3.8-flash
+    - kodikrouter/moonshotai/kimi-k3
+
+  # UI/UX реализация (без mandatory thinking ради скорости итераций)
+  designer:
+    - kodikrouter/minimax/minimax-m3
+    - kodikrouter/z-ai/glm-5.3-flash
+
+  # Независимый финальный аудит
+  advisor:
+    - kodikrouter/moonshotai/kimi-k3
+
+  # Многошаговые субагентские задачи
+  # glm-5.3-flash как основная рабочая лошадка; kimi-k2.7-code как фолбэк для сложных алгоритмических тупиков.
+  task:
+    - kodikrouter/z-ai/glm-5.3-flash
+    - kodikrouter/minimax/minimax-m3
+    - kodikrouter/moonshotai/kimi-k2.7-code
+
+  # Механические и фоновые задачи
+  sonic:
+    - kodikrouter/z-ai/glm-5.3-flash
+    - kodikrouter/qwen/qwen3.8-flash
+
+  tiny:
+    - kodikrouter/z-ai/glm-5.3-flash
+    - kodikrouter/qwen/qwen3.8-flash
+
+# Жёсткая привязка агентов к ролям для стабильности поведения
+task:
+  agentModelOverrides:
+    reviewer: "@slow"
+    security-reviewer: "@slow"
+    scout: "@smol"
+    librarian: "@smol"
+    designer: "@designer"
+    sonic: "@sonic"
+    task: "@task"
+  eager: preferred
+setupVersion: 2
+astGrep:
+  enabled: true
