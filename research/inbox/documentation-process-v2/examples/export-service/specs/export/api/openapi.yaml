@@ -1,0 +1,206 @@
+openapi: 3.0.3
+info:
+  title: Export API
+  version: 1.0.0
+  description: |
+    Data export service API.
+    
+    ## Authentication
+    All endpoints require JWT Bearer token.
+    
+    ## Rate Limiting
+    Max 10 export requests per user per hour.
+
+servers:
+  - url: https://api.example.com/v1
+    description: Production
+
+security:
+  - bearerAuth: []
+
+paths:
+  /exports:
+    post:
+      operationId: createExport
+      summary: Request data export
+      description: |
+        Creates a new export task. Returns immediately with export ID.
+        
+        **REQ-EXP-005**: Acknowledge within 2 seconds
+      tags: [Exports]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExportRequest'
+            examples:
+              csv:
+                value:
+                  format: csv
+                  filters:
+                    date_from: "2025-01-01"
+              json:
+                value:
+                  format: json
+                  filters: {}
+      responses:
+        '202':
+          description: Export accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExportCreatedResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Export already in progress
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Rate limit exceeded
+
+  /exports/{id}:
+    get:
+      operationId: getExportStatus
+      summary: Get export status
+      tags: [Exports]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Export status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExportStatus'
+        '403':
+          description: Not authorized to view this export
+        '404':
+          description: Export not found
+
+  /exports/{id}/download:
+    get:
+      operationId: downloadExport
+      summary: Download export file
+      description: |
+        **REQ-EXP-019**: Links expire after 7 days
+      tags: [Exports]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Export file
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary
+            application/json:
+              schema:
+                type: string
+                format: binary
+        '403':
+          description: Not authorized
+        '404':
+          description: Export not found
+        '410':
+          description: Link expired
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    ExportRequest:
+      type: object
+      required: [format]
+      properties:
+        format:
+          type: string
+          enum: [csv, json]
+          description: "**REQ-EXP-001, REQ-EXP-002**: Supported formats"
+        filters:
+          type: object
+          properties:
+            date_from:
+              type: string
+              format: date
+            date_to:
+              type: string
+              format: date
+
+    ExportCreatedResponse:
+      type: object
+      properties:
+        export_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum: [pending]
+        status_url:
+          type: string
+
+    ExportStatus:
+      type: object
+      properties:
+        export_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum: [pending, processing, completed, failed]
+        progress_percent:
+          type: integer
+          minimum: 0
+          maximum: 100
+          description: "**REQ-EXP-009**: Progress tracking"
+        download_url:
+          type: string
+          nullable: true
+          description: Present only when status=completed
+        file_size:
+          type: integer
+          format: int64
+          nullable: true
+        expires_at:
+          type: string
+          format: date-time
+          nullable: true
+          description: "**REQ-EXP-024**: 7-day expiry"
+        error_message:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        details:
+          type: object
