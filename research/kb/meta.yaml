@@ -237,12 +237,12 @@ articles:
 
   - id: landscape/spec-kitty-research
     title: "Spec Kitty Research Mission и specs.md Ideation Flow: research как фаза delivery"
-    status: draft
+    status: reviewed
     sources:
       - research-and-notes/research-process.md
       - README.md
     last_touched: 2026-09-30
-    freshness_notes: "Spec Kitty активно развивается (13k+ commits); specs.md — молодое community (Dec 2025). Перепроверить статус и независимую критику в фазе 6."
+    freshness_notes: "Выжимка восстановлена полностью (перезапуск E4: варианты A–D, 3 итерации пересмотра позиции, все сравнительные таблицы). Spec Kitty активно развивается (13k+ commits); specs.md — молодое community (Dec 2025). Перепроверить статус и независимую критику в фазе 6."
 
   - id: methods/agents-constitution
     title: "AGENTS.md и CONSTITUTION.md: durable context для AI-агентов"
