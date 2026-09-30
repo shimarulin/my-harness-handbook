@@ -149,6 +149,7 @@ articles:
       - documentation-process-v2/scaling/README.md
       - documentation-process-v2/modular-process.md
       - documentation-process-v2/modules/README.md
+      - documentation-process-v2/process-variants.md
       - documentation-process-v3/08-examples/README.md
     last_touched: 2026-09-30
     freshness_notes: "Модель стабильна; открытый вопрос — понижение уровня (не описано в источниках)."
@@ -242,4 +243,70 @@ articles:
       - README.md
     last_touched: 2026-09-30
     freshness_notes: "Spec Kitty активно развивается (13k+ commits); specs.md — молодое community (Dec 2025). Перепроверить статус и независимую критику в фазе 6."
+
+  - id: methods/agents-constitution
+    title: "AGENTS.md и CONSTITUTION.md: durable context для AI-агентов"
+    status: draft
+    sources:
+      - documentation-process-v3/05-agents-and-constitution-guide.md
+      - documentation-process-v3/03-open-questions-analysis.md
+    last_touched: 2026-09-30
+    freshness_notes: "Стандарт AGENTS.md развивается (поддержка инструментами, layered setup) — перепроверять в фазе 6."
+
+  - id: methods/ai-agent-workflows
+    title: "AI-агенты в процессе: роли, HITL-паттерны, промпт-паттерны"
+    status: draft
+    sources:
+      - documentation-process-v2/ai-agent-workflows/README.md
+    last_touched: 2026-09-30
+    freshness_notes: "Промпт-паттерны стабильны; конкретные slash-команды инструментов проверять в фазе 6."
+
+  - id: methods/docs-cicd
+    title: "Docs-as-Code CI/CD: пайплайн проверок документации"
+    status: draft
+    sources:
+      - documentation-process-v3/07-cicd-docs-pipeline.md
+    last_touched: 2026-09-30
+    freshness_notes: "Версии actions/инструментов (checkout@v4, markdownlint-cli2 v0.14.0, Gauge v1.0.8) устаревают — обновлять при использовании."
+
+  - id: methods/review-collaboration
+    title: "Ревью и коллаборация над документацией"
+    status: draft
+    sources:
+      - documentation-process-v2/review-collaboration/README.md
+    last_touched: 2026-09-30
+    freshness_notes: "Стабильная тема; lazy consensus помечен осторожностью (конфликт с «молчание ≠ согласие»)."
+
+  - id: methods/versioning-lifecycle
+    title: "Версионирование и жизненный цикл артефактов"
+    status: draft
+    sources:
+      - documentation-process-v2/versioning-lifecycle/README.md
+    last_touched: 2026-09-30
+    freshness_notes: "Стабильная тема."
+
+  - id: methods/metrics-dashboards
+    title: "Метрики и dashboards процесса"
+    status: draft
+    sources:
+      - documentation-process-v2/metrics-dashboards/README.md
+    last_touched: 2026-09-30
+    freshness_notes: "Пороги/targets — эвристики исходного документа; калибровать под свою команду."
+
+  - id: methods/training-onboarding
+    title: "Обучение и онбординг процессу"
+    status: draft
+    sources:
+      - documentation-process-v2/training-onboarding/README.md
+    last_touched: 2026-09-30
+    freshness_notes: "Стабильная тема."
+
+  - id: principles/process-design-goals
+    title: "Принципы проектирования процессов: цели, ограничения, риски (синтез v2 goals + v3)"
+    status: draft
+    sources:
+      - documentation-process-v2/goals.md
+      - documentation-process-v3/00-goals.md
+    last_touched: 2026-09-30
+    freshness_notes: "Конституционный слой — стабилен; связь с критикой SDD поддерживать актуальной по мере фазы 6."
 

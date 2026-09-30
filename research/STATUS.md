@@ -36,10 +36,10 @@
 
 | source | статус | куда выгружено | охват / остаток | сессия |
 |---|---|---|---|---|
-| documentation-process-v2/goals.md | triaged | guide гл.2 (принципы) | Сырьё для синтеза (Q3) | 2026-09-30 |
-| documentation-process-v2/knowledge-base.md | new | → kb/landscape/ (по темам) | | |
+| documentation-process-v2/goals.md | done | kb/principles/process-design-goals.md | полный (Vision, 5 принципов, Requirements, Constraints, Metrics, Risks) | 2026-09-30 |
+| documentation-process-v2/knowledge-base.md | rejected | — | Каталог из 17 разделов, ~90% покрыт KB-статьями фаз 1–5; уникальные сущности (Structurizr, Volere/IREB, Zachman, 4+1, RFD, FitNesse/Concordion/JGiven/Spock, Alloy/Event-B, ISO 25010 перечень, ATAM/QAW, docToolchain, Read the Docs, Domain Storytelling, Event Modeling, Impact Mapping, Amazon PR/FAQ, Google Design Doc) — учтены в landscape-статьях как упоминания; отдельной ценности сверх KB не несёт | 2026-09-30 |
 | documentation-process-v2/modular-process.md | done | kb/methods/artifact-pipeline.md, process-levels.md, artifact-templates.md | полный | 2026-09-30 |
-| documentation-process-v2/process-variants.md | new | → синтез гл.5 | | |
+| documentation-process-v2/process-variants.md | done | kb/methods/process-levels.md (фазовая эволюция), artifact-pipeline.md (композиции pipelines) | Навигационные артефакты поглощены (Decision Matrix, сравнительная таблица 7 pipelines, hybrid-рецепты); модель «7 named pipelines» замещена модульной сборкой + уровнями (формула KB: «не выбирайте pipeline — соберите его») | 2026-09-30 |
 | documentation-process-v2/modules/README.md | done | kb/methods/artifact-pipeline.md, process-levels.md | полный | 2026-09-30 |
 | documentation-process-v2/modules/problem-statement.md | done | kb/methods/artifact-templates.md | полный | 2026-09-30 |
 | documentation-process-v2/modules/prd.md | done | kb/methods/artifact-templates.md | полный | 2026-09-30 |
@@ -51,14 +51,14 @@
 | documentation-process-v2/modules/api-specs.md | done | kb/methods/artifact-templates.md | полный | 2026-09-30 |
 | documentation-process-v2/modules/tasks.md | done | kb/methods/artifact-templates.md | полный | 2026-09-30 |
 | documentation-process-v2/modules/implementation.md | done | kb/methods/artifact-templates.md | полный | 2026-09-30 |
-| documentation-process-v2/versioning-lifecycle/README.md | new | → guide гл.9 | | |
+| documentation-process-v2/versioning-lifecycle/README.md | done | kb/methods/versioning-lifecycle.md | полный | 2026-09-30 |
 | documentation-process-v2/storage-organization/README.md | done | kb/methods/repository-structure.md | полный | 2026-09-30 |
 | documentation-process-v2/tools-automation/README.md | done | kb/landscape/toolchain-registry.md | полный | 2026-09-30 |
-| documentation-process-v2/review-collaboration/README.md | new | → guide гл.9 | | |
+| documentation-process-v2/review-collaboration/README.md | done | kb/methods/review-collaboration.md | полный | 2026-09-30 |
 | documentation-process-v2/scaling/README.md | done | kb/methods/process-levels.md | полный | 2026-09-30 |
-| documentation-process-v2/metrics-dashboards/README.md | new | → guide гл.9 | | |
-| documentation-process-v2/training-onboarding/README.md | new | → guide гл.9 | | |
-| documentation-process-v2/ai-agent-workflows/README.md | new | → guide гл.7 | | |
+| documentation-process-v2/metrics-dashboards/README.md | done | kb/methods/metrics-dashboards.md | полный | 2026-09-30 |
+| documentation-process-v2/training-onboarding/README.md | done | kb/methods/training-onboarding.md | полный | 2026-09-30 |
+| documentation-process-v2/ai-agent-workflows/README.md | done | kb/methods/ai-agent-workflows.md | полный | 2026-09-30 |
 | documentation-process-v2/examples/export-service/ | partial | kb/methods/process-examples.md | README + все артефакты (specs/, docs/, features/) поглощены в разбор; каталог остаётся в inbox как копируемый эталон до фазы 7 (архивировать или перенести в guide/examples) | 2026-09-30 |
 
 ### Группа C — процессы v3 (`inbox/documentation-process-v3/`)
@@ -66,13 +66,13 @@
 | source | статус | куда выгружено | охват / остаток | сессия |
 |---|---|---|---|---|
 | documentation-process-v3/00-goals.md | done | kb/methods/process-levels.md, artifact-pipeline.md | полный (P1–P10, G1–G6, критерии успеха поглощены) | 2026-09-30 |
-| documentation-process-v3/01-knowledge-summary.md | new | → kb/landscape/, kb/methods/ (по разделам 1–11) | | |
+| documentation-process-v3/01-knowledge-summary.md | rejected | — | Каталог из 11 разделов, ~90% покрыт KB фаз 1–5; уникальное (Any Decision Records, docToolchain, pyadr, Concordion/JGiven/FitNesse/Spock, Domain Story Telling, Event Modeling, Impact Mapping, Example Mapping, Amazon PR/FAQ, Google Design Doc, Read the Docs) — учтено в landscape-статьях; пробелы №2 (Human↔AI approval-гейты) и №3 (CI-пайплайн) закрыты статьями ai-agent-workflows.md и docs-cicd.md | 2026-09-30 |
 | documentation-process-v3/02-process-design.md | done | kb/methods/artifact-pipeline.md, process-levels.md | полный | 2026-09-30 |
-| documentation-process-v3/03-open-questions-analysis.md | new | → guide гл.10, ideas/ | | |
+| documentation-process-v3/03-open-questions-analysis.md | done | kb/methods/agents-constitution.md (прототипы), kb/landscape/toolchain-registry.md (Spec Kit vs OpenSpec, EARS storage вариант A), repository-structure.md (ideas/) | полный; 6 открытых вопросов с рекомендациями поглощены | 2026-09-30 |
 | documentation-process-v3/04-tool-selection-and-migration.md | done | kb/landscape/toolchain-registry.md | полный | 2026-09-30 |
-| documentation-process-v3/05-agents-and-constitution-guide.md | new | → guide гл.7 | | |
+| documentation-process-v3/05-agents-and-constitution-guide.md | done | kb/methods/agents-constitution.md | полный | 2026-09-30 |
 | documentation-process-v3/06-repository-structure.md | done | kb/methods/repository-structure.md | полный | 2026-09-30 |
-| documentation-process-v3/07-cicd-docs-pipeline.md | new | → guide гл.9 | | |
+| documentation-process-v3/07-cicd-docs-pipeline.md | done | kb/methods/docs-cicd.md | полный | 2026-09-30 |
 | documentation-process-v3/09-toolchain-registry.md | done | kb/landscape/toolchain-registry.md | полный | 2026-09-30 |
 | documentation-process-v3/08-examples/ | partial | kb/methods/process-examples.md | README + 3 примера (L1/L2/L3) разобраны; каталог остаётся в inbox как копируемый эталон до фазы 7 | 2026-09-30 |
 
@@ -136,6 +136,12 @@
 | Ядро + project-local кастомизация (.research/: templates/config/hooks/extensions с fallback chain) | E ч.3 (паттерн Spec Kit/pre-commit/Husky) | Архитектура распространения собственного tooling без vendor-lock |
 | Research как фаза delivery pipeline (Ideation → Research → Spec → Plan → Implement), не отдельная ниша | E ч.4 (пересмотр позиции) | Меняет границы собственной системы: research-функцию можно adopt (Spec Kitty), не строить |
 | Evidence-gated state machine для research (guards: минимум 3 источника, findings.md обязателен) + evidence-log.csv | E ч.4 (Spec Kitty) | Конкретный механизм блокирующих gate для research-процесса; соответствует принципу invariants-and-gates |
+| AGENTS.md как canonical cross-tool standard + tool-specific файлы импортируют (@AGENTS.md); hierarchical loading (ближайший в дереве) | v3 05 (kb/methods/agents-constitution.md) | Решает durable context без vendor-lock на harness; прямой паттерн для собственной системы |
+| CONSTITUTION.md immutable + amendment через RFC + Governance-секция | v3 05/03 | Механизм «конституции» собственной системы: принципы с явным процессом изменения |
+| HITL-паттерны (AI Drafts Human Decides / Generates Validates / Assists Executes / Human Defines AI Implements) как именованные протоколы | v2 ai-agent-workflows | Каталог протоколов human↔AI handoff — операционный слой системы |
+| Quality gates как серия блокирующих CI-проверок для документации (EARS → coverage → architecture → tests → AI metrics) | v3 07 + v2 metrics | Docs-as-Code gate — реализация принципа invariants-and-gates для артефактов |
+| Error Pattern Dashboard + prevention (prompt templates с anti-patterns, checklists) как механизм обучения процесса | v2 metrics | Замыкает feedback loop: ошибка → pattern → защита в tooling, а не в инструкциях |
+| Ленивая консенсусность (lazy consensus) конфликтует с «молчание ≠ согласие» — зона напряжения | v2 review vs Шапиро | Кандидат на разбор в ideas/: где молчание допустимо (minor), где — нет (accepted) |
 
 ## Протокол сессии
 
@@ -152,3 +158,4 @@
 | 2026-09-30 | 2 | Группа D поглощена: 5 статей kb/principles/ (ai-degradation-phenomena, cheapest-form, invariants-and-gates, attention-economy, process-over-tool) + kb/landscape/sdd-criticism.md (синтез критики, основа главы 4). Все 7 источников D → done; журнал идей +7 записей. При правке meta.yaml сломал YAML — починен, инвариант перепроверен |
 | 2026-09-30 | 3 | Процессное ядро (синтез v2+v3 с нуля): 6 статей — methods/process-levels (две оси L0–L4 × S1–S5), artifact-pipeline (6 core + 9 optional, трассировка), artifact-templates (10 модулей), repository-structure (синтез v3/06 + v2/storage), process-examples (L1/L2/L3 + export-service); landscape/toolchain-registry (скоринг, exit strategies, health check). 22 источника → done, 2 эталона → partial (остаются как копируемые примеры до фазы 7). Журнал идей +5 |
 | 2026-09-30 | 4 | Группа E поглощена по 4 частям: kb/methods/research-knowledge.md (ч.1), kb/principles/content-stays-virtual-structure.md (ч.2 — инсайты #1–7 + симлинки vs MOC, ядро кандидата в систему), kb/methods/research-tooling.md (ч.3), kb/landscape/spec-kitty-research.md (ч.4). E → done; журнал идей +6 |
+| 2026-09-30 | 5 | Остаток B/C поглощён: 8 статей — methods/agents-constitution, ai-agent-workflows, docs-cicd, review-collaboration, versioning-lifecycle, metrics-dashboards, training-onboarding; principles/process-design-goals. 11 источников → done, 2 корпуса (v2 knowledge-base, v3 01) → rejected (~90% покрытия KB, уникальное учтено). Журнал идей +6. Весь корпус inbox обработан (кроме F — фаза 6) |
