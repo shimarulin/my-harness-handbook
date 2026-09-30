@@ -80,13 +80,13 @@
 
 | source | статус | куда выгружено | охват / остаток | сессия |
 |---|---|---|---|---|
-| documentation-process-criticism/q1/README.md | triaged | — | Индекс источников: 18+ ссылок — вход для фазы 6 | 2026-09-30 |
-| documentation-process-criticism/q1/ai-development-processes-analysis.md | new | → kb/principles/ + guide гл.4 | | |
-| documentation-process-criticism/q1/sdd-frameworks-analysis.md | new | → kb/principles/ + guide гл.4 | | |
-| documentation-process-criticism/g1/openspec-sdd-process-criticism.md | new | → kb/principles/ + guide гл.4 | | |
-| documentation-process-criticism/g1/open-sdd-frameworks-comparison.md | new | → kb/landscape/sdd-tools-* | | |
-| documentation-process-criticism/d1/openspec-sdd-criticism-and-principles.md | new | → kb/principles/ + guide гл.4 | | |
-| documentation-process-criticism/d1/open-source-sdd-frameworks-review.md | new | → kb/landscape/sdd-tools-* | | |
+| documentation-process-criticism/q1/README.md | done | kb/landscape/sdd-criticism.md (реестр источников) | Реестр ссылок поглощён в раздел «Источники» статей фазы 2; 18+ внешних ссылок — также вход для фазы 6 | 2026-09-30 |
+| documentation-process-criticism/q1/ai-development-processes-analysis.md | done | kb/principles/ (все 5), kb/landscape/sdd-criticism.md | полный; фреймворковые детали → доп. вход для фазы 6 | 2026-09-30 |
+| documentation-process-criticism/q1/sdd-frameworks-analysis.md | done | kb/principles/process-over-tool.md, kb/landscape/sdd-criticism.md | полный; сценарные рекомендации и чек-листы vendor-lock — доп. вход для фазы 6 | 2026-09-30 |
+| documentation-process-criticism/g1/openspec-sdd-process-criticism.md | done | kb/principles/ (все 5), kb/landscape/sdd-criticism.md | полный | 2026-09-30 |
+| documentation-process-criticism/g1/open-sdd-frameworks-comparison.md | done | kb/landscape/sdd-criticism.md | Принципы и вердикты поглощены; детальный ландшафт (project health, контекст-модели, новые альтернативы) — вход для фазы 6 | 2026-09-30 |
+| documentation-process-criticism/d1/openspec-sdd-criticism-and-principles.md | done | kb/principles/ (все 5), kb/landscape/sdd-criticism.md | полный | 2026-09-30 |
+| documentation-process-criticism/d1/open-source-sdd-frameworks-review.md | done | kb/landscape/sdd-criticism.md | Принципы и вердикты поглощены; обзор 18+ фреймворков — вход для фазы 6 | 2026-09-30 |
 
 ### Группа E — исследовательские процессы (`inbox/research-and-notes/`)
 
@@ -118,6 +118,13 @@
 | Модульность процесса: артефакты как компонуемые модули с явными интерфейсами | B/modular-process.md | Процесс собирается под задачу, а не монолитен; сочетается с уровнями масштаба |
 | G4 human+AI collaboration, G5 масштабируемость, G2 docs-first, принципы P1–P10 | C/00-goals.md | Целевые свойства системы + критерии успеха (traceability/onboarding/vendor-exit/scale/AI тесты) |
 | Избегать ненужного трения | Сквозной принцип (пользователь, 2026-09-30) | Каждое решение проверяется: не добавляет ли friction сверх ценности |
+| Дешевая форма требования: тип/контракт/PBT/пример/ADR, проза — только для дорогоформализуемого | D (kb/principles/cheapest-form.md; Dhwtj, Шапиро, Бём) | Ядро собственной системы: артефакты выбираются по цене удержания, не по шаблону |
+| Явные инварианты с rationale + блокирующие машинные gate вне досягаемости агента | D (kb/principles/invariants-and-gates.md; Gromilo, EPAM, issue #194) | Прямо ложится на дизайн harness: hooks/CI > промпты |
+| Экономика внимания: машина фильтрует, человек решает только по квалифицированным расхождениям; масштаб процесса = f(сложность, цена ошибки) | D (kb/principles/attention-economy.md; Шапиро, Nadeem) | Соединяется с уровнями L0–L4 (C/00): уровни как механизм экономики внимания |
+| Молчание ≠ согласие; явная приёмка + фриз; ведомость допущений (удача оставляет след) | D (kb/principles/ai-degradation-phenomena.md; Шапиро) | Уникальный протокол приёмки AI-изменений; дифференциатор собственной системы |
+| Сжатые представления как индексы к коду (6 типов), не вторая спека | D (kb/principles/ai-degradation-phenomena.md; Шапиро) | Кандидат на механизм durable context для агентов |
+| Процесс проектируется владельцем; инструмент оборачивается в свою абстракцию; план миграции | D (kb/principles/process-over-tool.md; Isenberg) | Принцип для собственной системы: она и есть «своя абстракция» поверх готовых частей |
+| Место артефактов определяет доступность процесса (upstream-работа — не обязательно репо) | D (Talk Think Do кейс) | Граница git-native принципа: требования upstream — вне репо, с зеркалированием |
 
 ## Протокол сессии
 
@@ -131,3 +138,4 @@
 |---|---|---|
 | 2026-09-30 | 0 | Инвентаризация inbox (74 файла, 6 групп A–F), PLAN.md accepted (Q1–Q3, Q5), STATUS.md создан, журнал идей начат. Пользователь указал входы ideas (инсайты E #1–7, «Симлинки против MOC», B/goals, B/modular-process, C/00) + принцип «избегать ненужного трения»; добавлен протокол отклонений от пути (PLAN §5.4); правило: коммит после каждой фазы |
 | 2026-09-30 | 1 | Группа A поглощена: 8 KB-статей (methods: adr, ears, rfc-vs-sdd, prd, c4-arc42, research-compendium; landscape: bdd-tools, sdd-tools-overview) + kb/README.md (формат статьи) + meta.yaml (8 записей). Все 9 источников A → done |
+| 2026-09-30 | 2 | Группа D поглощена: 5 статей kb/principles/ (ai-degradation-phenomena, cheapest-form, invariants-and-gates, attention-economy, process-over-tool) + kb/landscape/sdd-criticism.md (синтез критики, основа главы 4). Все 7 источников D → done; журнал идей +7 записей. При правке meta.yaml сломал YAML — починен, инвариант перепроверен |

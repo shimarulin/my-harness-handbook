@@ -53,6 +53,69 @@ articles:
     last_touched: 2026-09-30
     freshness_notes: "Стабильная тема; цифры arc42 Quality Model (191/150/55/48) — на дату выжимки."
 
+  - id: principles/ai-degradation-phenomena
+    title: "Феномены деградации AI-агентов (феноменология Шапиро)"
+    status: draft
+    sources:
+      - documentation-process-criticism/q1/ai-development-processes-analysis.md
+      - documentation-process-criticism/g1/openspec-sdd-process-criticism.md
+      - documentation-process-criticism/d1/openspec-sdd-criticism-and-principles.md
+    last_touched: 2026-09-30
+    freshness_notes: "Теоретическая рамка — стабильна; проверять новые статьи Шапиро на ashapiro.ru."
+
+  - id: principles/cheapest-form
+    title: "Принцип: требование живёт в самой дешёвой форме"
+    status: draft
+    sources:
+      - documentation-process-criticism/q1/ai-development-processes-analysis.md
+      - documentation-process-criticism/g1/openspec-sdd-process-criticism.md
+      - documentation-process-criticism/d1/openspec-sdd-criticism-and-principles.md
+    last_touched: 2026-09-30
+    freshness_notes: "Принцип стабилен; таблица форм может пополняться (контрактные тесты, схемы)."
+
+  - id: principles/invariants-and-gates
+    title: "Принцип: явные инварианты и блокирующие gate"
+    status: draft
+    sources:
+      - documentation-process-criticism/q1/ai-development-processes-analysis.md
+      - documentation-process-criticism/g1/openspec-sdd-process-criticism.md
+      - documentation-process-criticism/d1/openspec-sdd-criticism-and-principles.md
+    last_touched: 2026-09-30
+    freshness_notes: "Статусы issues OpenSpec (#194, #381) проверять — могут быть решены."
+
+  - id: principles/attention-economy
+    title: "Принцип: экономика внимания человека и масштаб процесса"
+    status: draft
+    sources:
+      - documentation-process-criticism/q1/ai-development-processes-analysis.md
+      - documentation-process-criticism/g1/openspec-sdd-process-criticism.md
+    last_touched: 2026-09-30
+    freshness_notes: "Дискуссия вокруг «Plan Mode is Dead» активна (HN 469 комментариев) — следить за развитием в фазе 6."
+
+  - id: principles/process-over-tool
+    title: "Принцип: процесс важнее инструмента; инструмент заменяем"
+    status: draft
+    sources:
+      - documentation-process-criticism/q1/sdd-frameworks-analysis.md
+      - documentation-process-criticism/g1/openspec-sdd-process-criticism.md
+      - documentation-process-criticism/d1/openspec-sdd-criticism-and-principles.md
+    last_touched: 2026-09-30
+    freshness_notes: "Позиции Thoughtworks Radar и статусы инструментов меняются ежеквартально."
+
+  - id: landscape/sdd-criticism
+    title: "Критика SDD и AI-процессов: синтез (основа главы 4 гайда)"
+    status: draft
+    sources:
+      - documentation-process-criticism/q1/README.md
+      - documentation-process-criticism/q1/ai-development-processes-analysis.md
+      - documentation-process-criticism/q1/sdd-frameworks-analysis.md
+      - documentation-process-criticism/g1/openspec-sdd-process-criticism.md
+      - documentation-process-criticism/g1/open-sdd-frameworks-comparison.md
+      - documentation-process-criticism/d1/openspec-sdd-criticism-and-principles.md
+      - documentation-process-criticism/d1/open-source-sdd-frameworks-review.md
+    last_touched: 2026-09-30
+    freshness_notes: "Корпус критики 04–09.2026; дополнять в фазе 6 (свежая критика, новые кейсы, статусы issues). Параметр «что работает» пересматривать вместе с ландшафтом."
+
   - id: methods/research-compendium
     title: "Research Compendium: воспроизводимые исследовательские пакеты"
     status: draft
@@ -76,3 +139,4 @@ articles:
       - documentation-process/reference/sdd-landscape.md
     last_touched: 2026-09-30
     freshness_notes: "Быстро меняется: звёзды GitHub, число интеграций, workflow команд. Пересмотр обязателен в фазе 6 (свежий поиск + spec-weave, Spec Kitty, specs.md) и после фазы 2 (критика OpenSpec/SDD)."
+
