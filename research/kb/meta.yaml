@@ -210,3 +210,36 @@ articles:
     last_touched: 2026-09-30
     freshness_notes: "Эталоны стабильны; расхождения v2/v3 (expiry, rate limit) — нормативные, не ошибка."
 
+  - id: methods/research-knowledge
+    title: "Исследовательские процессы и управление знаниями в разработке"
+    status: draft
+    sources:
+      - research-and-notes/research-process.md
+    last_touched: 2026-09-30
+    freshness_notes: "Модель inbox→active→decided (статусы в путях) зафиксирована как вариант для малых корпусов S; для M+ — notes/+views/ (content-stays-virtual-structure)."
+
+  - id: principles/content-stays-virtual-structure
+    title: "Принцип: контент стабилен, структура виртуальна (notes/ + views/, симлинки vs MOC)"
+    status: draft
+    sources:
+      - research-and-notes/research-process.md
+    last_touched: 2026-09-30
+    freshness_notes: "Ядро кандидата в собственную систему (журнал идей). Проверить на практике при применении к KB проекта."
+
+  - id: methods/research-tooling
+    title: "Tooling для research-процессов: язык, CLI-дизайн, кастомизация"
+    status: draft
+    sources:
+      - research-and-notes/research-process.md
+    last_touched: 2026-09-30
+    freshness_notes: "Выбор языка (Python vs TypeScript) — контекстно-зависим; пересмотреть при старте реализации tooling."
+
+  - id: landscape/spec-kitty-research
+    title: "Spec Kitty Research Mission и specs.md Ideation Flow: research как фаза delivery"
+    status: draft
+    sources:
+      - research-and-notes/research-process.md
+      - README.md
+    last_touched: 2026-09-30
+    freshness_notes: "Spec Kitty активно развивается (13k+ commits); specs.md — молодое community (Dec 2025). Перепроверить статус и независимую критику в фазе 6."
+

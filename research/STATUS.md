@@ -92,7 +92,7 @@
 
 | source | статус | куда выгружено | охват / остаток | сессия |
 |---|---|---|---|---|
-| research-and-notes/research-process.md | triaged | → kb/methods/research-knowledge.md + guide гл.8 | 302 заголовка, ~5 логических частей; обрабатывать по секциям | 2026-09-30 |
+| research-and-notes/research-process.md | done | kb/methods/research-knowledge.md (ч.1, стр. 1–629), kb/principles/content-stays-virtual-structure.md (ч.2, стр. 630–1567), kb/methods/research-tooling.md (ч.3, стр. 1568–2229), kb/landscape/spec-kitty-research.md (ч.4, стр. 2230–3019) | полный; все 4 части поглощены | 2026-09-30 |
 
 ### Группа F — бэклог внешних источников (`inbox/README.md`)
 
@@ -130,6 +130,12 @@
 | Трассировка через YAML front-matter (id/type/status/traces) + CI-проверка ссылок | v3 02/06 | Машинно-проверяемый след решений; механизм для собственной системы |
 | Реестр инструментов с exit strategies и quarterly health check (любой инструмент заменим ≤ 1 sprint) | v3 09 (kb/landscape/toolchain-registry.md) | Vendor-exit как операционная практика, не лозунг; прямое применение к собственному тулчейну |
 | Эталоны как few-shot examples для AI-агентов (нормативные заполненные примеры L1/L2/L3) | v3 08-examples | Канонические примеры против наплыва (Шапиро): агент получает образец, а не только правила |
+| Инсайты #1–7 как основание архитектуры KB (иерархия = оглавление; статус в frontmatter + структуре; не перемещать; скрипт вместо агента; много тем; симлинки; ссылка дешевле файла) | E ч.2 (kb/principles/content-stays-virtual-structure.md; пользователь) | Сформулированы пользователем, развиты в полную архитектуру — претендент на ядро новой системы |
+| Симлинки как primary-навигация + frontmatter как source of truth + MOC опционально (вердикт после честного разбора рисков) | E ч.2 | Конкретное архитектурное решение для KB системы; риски купированы (относительные пути, sync-скрипт, CI verify) |
+| Двухрежимный CLI (dual-mode): интерактив для человека, флаги+JSON для агента | E ч.3 (kb/methods/research-tooling.md; прецедент uvtemplate) | Принцип дизайна всех инструментов собственной системы |
+| Ядро + project-local кастомизация (.research/: templates/config/hooks/extensions с fallback chain) | E ч.3 (паттерн Spec Kit/pre-commit/Husky) | Архитектура распространения собственного tooling без vendor-lock |
+| Research как фаза delivery pipeline (Ideation → Research → Spec → Plan → Implement), не отдельная ниша | E ч.4 (пересмотр позиции) | Меняет границы собственной системы: research-функцию можно adopt (Spec Kitty), не строить |
+| Evidence-gated state machine для research (guards: минимум 3 источника, findings.md обязателен) + evidence-log.csv | E ч.4 (Spec Kitty) | Конкретный механизм блокирующих gate для research-процесса; соответствует принципу invariants-and-gates |
 
 ## Протокол сессии
 
@@ -145,3 +151,4 @@
 | 2026-09-30 | 1 | Группа A поглощена: 8 KB-статей (methods: adr, ears, rfc-vs-sdd, prd, c4-arc42, research-compendium; landscape: bdd-tools, sdd-tools-overview) + kb/README.md (формат статьи) + meta.yaml (8 записей). Все 9 источников A → done |
 | 2026-09-30 | 2 | Группа D поглощена: 5 статей kb/principles/ (ai-degradation-phenomena, cheapest-form, invariants-and-gates, attention-economy, process-over-tool) + kb/landscape/sdd-criticism.md (синтез критики, основа главы 4). Все 7 источников D → done; журнал идей +7 записей. При правке meta.yaml сломал YAML — починен, инвариант перепроверен |
 | 2026-09-30 | 3 | Процессное ядро (синтез v2+v3 с нуля): 6 статей — methods/process-levels (две оси L0–L4 × S1–S5), artifact-pipeline (6 core + 9 optional, трассировка), artifact-templates (10 модулей), repository-structure (синтез v3/06 + v2/storage), process-examples (L1/L2/L3 + export-service); landscape/toolchain-registry (скоринг, exit strategies, health check). 22 источника → done, 2 эталона → partial (остаются как копируемые примеры до фазы 7). Журнал идей +5 |
+| 2026-09-30 | 4 | Группа E поглощена по 4 частям: kb/methods/research-knowledge.md (ч.1), kb/principles/content-stays-virtual-structure.md (ч.2 — инсайты #1–7 + симлинки vs MOC, ядро кандидата в систему), kb/methods/research-tooling.md (ч.3), kb/landscape/spec-kitty-research.md (ч.4). E → done; журнал идей +6 |
