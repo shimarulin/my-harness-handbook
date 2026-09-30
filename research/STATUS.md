@@ -38,43 +38,43 @@
 |---|---|---|---|---|
 | documentation-process-v2/goals.md | triaged | guide гл.2 (принципы) | Сырьё для синтеза (Q3) | 2026-09-30 |
 | documentation-process-v2/knowledge-base.md | new | → kb/landscape/ (по темам) | | |
-| documentation-process-v2/modular-process.md | new | → синтез гл.5 | | |
+| documentation-process-v2/modular-process.md | done | kb/methods/artifact-pipeline.md, process-levels.md, artifact-templates.md | полный | 2026-09-30 |
 | documentation-process-v2/process-variants.md | new | → синтез гл.5 | | |
-| documentation-process-v2/modules/README.md | new | → синтез гл.5 | | |
-| documentation-process-v2/modules/problem-statement.md | new | → kb/methods/ + гл.5 | | |
-| documentation-process-v2/modules/prd.md | new | → kb/methods/ + гл.5 | | |
-| documentation-process-v2/modules/rfc.md | new | → kb/methods/ + гл.5 | | |
-| documentation-process-v2/modules/approach.md | new | → kb/methods/ + гл.5 | | |
-| documentation-process-v2/modules/requirements.md | new | → kb/methods/ + гл.5 | | |
-| documentation-process-v2/modules/bdd.md | new | → kb/methods/ + гл.5 | | |
-| documentation-process-v2/modules/adr.md | new | → kb/methods/ + гл.5 | | |
-| documentation-process-v2/modules/api-specs.md | new | → kb/methods/ + гл.5 | | |
-| documentation-process-v2/modules/tasks.md | new | → kb/methods/ + гл.5 | | |
-| documentation-process-v2/modules/implementation.md | new | → kb/methods/ + гл.5 | | |
+| documentation-process-v2/modules/README.md | done | kb/methods/artifact-pipeline.md, process-levels.md | полный | 2026-09-30 |
+| documentation-process-v2/modules/problem-statement.md | done | kb/methods/artifact-templates.md | полный | 2026-09-30 |
+| documentation-process-v2/modules/prd.md | done | kb/methods/artifact-templates.md | полный | 2026-09-30 |
+| documentation-process-v2/modules/rfc.md | done | kb/methods/artifact-templates.md | полный | 2026-09-30 |
+| documentation-process-v2/modules/approach.md | done | kb/methods/artifact-templates.md | полный | 2026-09-30 |
+| documentation-process-v2/modules/requirements.md | done | kb/methods/artifact-templates.md | полный | 2026-09-30 |
+| documentation-process-v2/modules/bdd.md | done | kb/methods/artifact-templates.md | полный | 2026-09-30 |
+| documentation-process-v2/modules/adr.md | done | kb/methods/artifact-templates.md | полный | 2026-09-30 |
+| documentation-process-v2/modules/api-specs.md | done | kb/methods/artifact-templates.md | полный | 2026-09-30 |
+| documentation-process-v2/modules/tasks.md | done | kb/methods/artifact-templates.md | полный | 2026-09-30 |
+| documentation-process-v2/modules/implementation.md | done | kb/methods/artifact-templates.md | полный | 2026-09-30 |
 | documentation-process-v2/versioning-lifecycle/README.md | new | → guide гл.9 | | |
-| documentation-process-v2/storage-organization/README.md | new | → guide гл.6 | | |
-| documentation-process-v2/tools-automation/README.md | new | → guide гл.6 | | |
+| documentation-process-v2/storage-organization/README.md | done | kb/methods/repository-structure.md | полный | 2026-09-30 |
+| documentation-process-v2/tools-automation/README.md | done | kb/landscape/toolchain-registry.md | полный | 2026-09-30 |
 | documentation-process-v2/review-collaboration/README.md | new | → guide гл.9 | | |
-| documentation-process-v2/scaling/README.md | new | → guide гл.5 | | |
+| documentation-process-v2/scaling/README.md | done | kb/methods/process-levels.md | полный | 2026-09-30 |
 | documentation-process-v2/metrics-dashboards/README.md | new | → guide гл.9 | | |
 | documentation-process-v2/training-onboarding/README.md | new | → guide гл.9 | | |
 | documentation-process-v2/ai-agent-workflows/README.md | new | → guide гл.7 | | |
-| documentation-process-v2/examples/export-service/ | new | → guide гл.5 (сквозной пример) | целиком, со src/specs/docs | |
+| documentation-process-v2/examples/export-service/ | partial | kb/methods/process-examples.md | README + все артефакты (specs/, docs/, features/) поглощены в разбор; каталог остаётся в inbox как копируемый эталон до фазы 7 (архивировать или перенести в guide/examples) | 2026-09-30 |
 
 ### Группа C — процессы v3 (`inbox/documentation-process-v3/`)
 
 | source | статус | куда выгружено | охват / остаток | сессия |
 |---|---|---|---|---|
-| documentation-process-v3/00-goals.md | triaged | guide гл.1–2 | Принципы P1–P10, уровни L0–L4 — сырьё для синтеза (Q3) | 2026-09-30 |
+| documentation-process-v3/00-goals.md | done | kb/methods/process-levels.md, artifact-pipeline.md | полный (P1–P10, G1–G6, критерии успеха поглощены) | 2026-09-30 |
 | documentation-process-v3/01-knowledge-summary.md | new | → kb/landscape/, kb/methods/ (по разделам 1–11) | | |
-| documentation-process-v3/02-process-design.md | new | → синтез гл.5 | | |
+| documentation-process-v3/02-process-design.md | done | kb/methods/artifact-pipeline.md, process-levels.md | полный | 2026-09-30 |
 | documentation-process-v3/03-open-questions-analysis.md | new | → guide гл.10, ideas/ | | |
-| documentation-process-v3/04-tool-selection-and-migration.md | new | → guide гл.6, kb/landscape/ | | |
+| documentation-process-v3/04-tool-selection-and-migration.md | done | kb/landscape/toolchain-registry.md | полный | 2026-09-30 |
 | documentation-process-v3/05-agents-and-constitution-guide.md | new | → guide гл.7 | | |
-| documentation-process-v3/06-repository-structure.md | new | → guide гл.6 | | |
+| documentation-process-v3/06-repository-structure.md | done | kb/methods/repository-structure.md | полный | 2026-09-30 |
 | documentation-process-v3/07-cicd-docs-pipeline.md | new | → guide гл.9 | | |
-| documentation-process-v3/09-toolchain-registry.md | new | → kb/landscape/toolchain-registry.md | | |
-| documentation-process-v3/08-examples/ | new | → guide гл.5 (примеры L1/L2/L3) | | |
+| documentation-process-v3/09-toolchain-registry.md | done | kb/landscape/toolchain-registry.md | полный | 2026-09-30 |
+| documentation-process-v3/08-examples/ | partial | kb/methods/process-examples.md | README + 3 примера (L1/L2/L3) разобраны; каталог остаётся в inbox как копируемый эталон до фазы 7 | 2026-09-30 |
 
 ### Группа D — критика SDD (`inbox/documentation-process-criticism/`)
 
@@ -125,6 +125,11 @@
 | Сжатые представления как индексы к коду (6 типов), не вторая спека | D (kb/principles/ai-degradation-phenomena.md; Шапиро) | Кандидат на механизм durable context для агентов |
 | Процесс проектируется владельцем; инструмент оборачивается в свою абстракцию; план миграции | D (kb/principles/process-over-tool.md; Isenberg) | Принцип для собственной системы: она и есть «своя абстракция» поверх готовых частей |
 | Место артефактов определяет доступность процесса (upstream-работа — не обязательно репо) | D (Talk Think Do кейс) | Граница git-native принципа: требования upstream — вне репо, с зеркалированием |
+| Две оси масштаба: инициатива (L0–L4, per-изменение) × организация (S1–S5, per-команда) | Синтез фазы 3 (kb/methods/process-levels.md) | Разделяет «сколько документов на изменение» и «сколько governance»; кандидат в архитектуру новой системы |
+| Promotion-цепочка артефактов: idea→task→prd→rfc→adr со статусом promoted | v3 (kb/methods/artifact-pipeline.md) | Артефакты не рождаются «правильного уровня», а растут; сочетается с «content stays, structure is virtual» |
+| Трассировка через YAML front-matter (id/type/status/traces) + CI-проверка ссылок | v3 02/06 | Машинно-проверяемый след решений; механизм для собственной системы |
+| Реестр инструментов с exit strategies и quarterly health check (любой инструмент заменим ≤ 1 sprint) | v3 09 (kb/landscape/toolchain-registry.md) | Vendor-exit как операционная практика, не лозунг; прямое применение к собственному тулчейну |
+| Эталоны как few-shot examples для AI-агентов (нормативные заполненные примеры L1/L2/L3) | v3 08-examples | Канонические примеры против наплыва (Шапиро): агент получает образец, а не только правила |
 
 ## Протокол сессии
 
@@ -139,3 +144,4 @@
 | 2026-09-30 | 0 | Инвентаризация inbox (74 файла, 6 групп A–F), PLAN.md accepted (Q1–Q3, Q5), STATUS.md создан, журнал идей начат. Пользователь указал входы ideas (инсайты E #1–7, «Симлинки против MOC», B/goals, B/modular-process, C/00) + принцип «избегать ненужного трения»; добавлен протокол отклонений от пути (PLAN §5.4); правило: коммит после каждой фазы |
 | 2026-09-30 | 1 | Группа A поглощена: 8 KB-статей (methods: adr, ears, rfc-vs-sdd, prd, c4-arc42, research-compendium; landscape: bdd-tools, sdd-tools-overview) + kb/README.md (формат статьи) + meta.yaml (8 записей). Все 9 источников A → done |
 | 2026-09-30 | 2 | Группа D поглощена: 5 статей kb/principles/ (ai-degradation-phenomena, cheapest-form, invariants-and-gates, attention-economy, process-over-tool) + kb/landscape/sdd-criticism.md (синтез критики, основа главы 4). Все 7 источников D → done; журнал идей +7 записей. При правке meta.yaml сломал YAML — починен, инвариант перепроверен |
+| 2026-09-30 | 3 | Процессное ядро (синтез v2+v3 с нуля): 6 статей — methods/process-levels (две оси L0–L4 × S1–S5), artifact-pipeline (6 core + 9 optional, трассировка), artifact-templates (10 модулей), repository-structure (синтез v3/06 + v2/storage), process-examples (L1/L2/L3 + export-service); landscape/toolchain-registry (скоринг, exit strategies, health check). 22 источника → done, 2 эталона → partial (остаются как копируемые примеры до фазы 7). Журнал идей +5 |

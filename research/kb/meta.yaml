@@ -140,3 +140,73 @@ articles:
     last_touched: 2026-09-30
     freshness_notes: "Быстро меняется: звёзды GitHub, число интеграций, workflow команд. Пересмотр обязателен в фазе 6 (свежий поиск + spec-weave, Spec Kitty, specs.md) и после фазы 2 (критика OpenSpec/SDD)."
 
+  - id: methods/process-levels
+    title: "Уровни масштаба процесса (синтез v2+v3)"
+    status: draft
+    sources:
+      - documentation-process-v3/00-goals.md
+      - documentation-process-v3/02-process-design.md
+      - documentation-process-v2/scaling/README.md
+      - documentation-process-v2/modular-process.md
+      - documentation-process-v2/modules/README.md
+      - documentation-process-v3/08-examples/README.md
+    last_touched: 2026-09-30
+    freshness_notes: "Модель стабильна; открытый вопрос — понижение уровня (не описано в источниках)."
+
+  - id: methods/artifact-pipeline
+    title: "Пайплайн артефактов: модульная модель (синтез v2+v3)"
+    status: draft
+    sources:
+      - documentation-process-v2/modular-process.md
+      - documentation-process-v2/modules/README.md
+      - documentation-process-v3/02-process-design.md
+      - documentation-process-v3/00-goals.md
+    last_touched: 2026-09-30
+    freshness_notes: "Стабильна; критерии optional-модулей (пороги $100k, 1 мес) — эвристики, калибровать по практике."
+
+  - id: methods/artifact-templates
+    title: "Артефакты процесса: шаблоны и правила (10 модулей)"
+    status: draft
+    sources:
+      - documentation-process-v2/modules/problem-statement.md
+      - documentation-process-v2/modules/prd.md
+      - documentation-process-v2/modules/rfc.md
+      - documentation-process-v2/modules/approach.md
+      - documentation-process-v2/modules/requirements.md
+      - documentation-process-v2/modules/adr.md
+      - documentation-process-v2/modules/tasks.md
+      - documentation-process-v2/modules/implementation.md
+      - documentation-process-v2/modules/api-specs.md
+      - documentation-process-v2/modules/bdd.md
+      - documentation-process-v2/modular-process.md
+    last_touched: 2026-09-30
+    freshness_notes: "Шаблоны стабильны; AI-промпты модулей не поглощены — оставлены в источниках, кандидат на отдельную статью при необходимости."
+
+  - id: methods/repository-structure
+    title: "Структура репозитория: раскладка, ID, индексы (синтез v2+v3)"
+    status: draft
+    sources:
+      - documentation-process-v3/06-repository-structure.md
+      - documentation-process-v2/storage-organization/README.md
+    last_touched: 2026-09-30
+    freshness_notes: "Конвенция index-файлов (README.md vs _index.md) — решение синтеза, пересмотреть на практике фазы 7."
+
+  - id: landscape/toolchain-registry
+    title: "Реестр тулчейна: выбор, скоринг, exit strategies (синтез v2+v3)"
+    status: draft
+    sources:
+      - documentation-process-v3/09-toolchain-registry.md
+      - documentation-process-v3/04-tool-selection-and-migration.md
+      - documentation-process-v2/tools-automation/README.md
+    last_touched: 2026-09-30
+    freshness_notes: "Скоринги/звёзды/статусы (Log4brains unmaintained, SpecFlow EOL) — на дату источников; quarterly health check обязателен."
+
+  - id: methods/process-examples
+    title: "Сквозные примеры процесса: L1, L2, L3 и полный модульный проход"
+    status: draft
+    sources:
+      - documentation-process-v3/08-examples/README.md
+      - documentation-process-v2/examples/export-service/README.md
+    last_touched: 2026-09-30
+    freshness_notes: "Эталоны стабильны; расхождения v2/v3 (expiry, rate limit) — нормативные, не ошибка."
+
