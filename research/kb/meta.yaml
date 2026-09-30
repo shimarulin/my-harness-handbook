@@ -12,4 +12,67 @@
 # Инвариант покрытия: каждый inbox-файл со статусом done в research/STATUS.md
 # обязан встречаться в sources хотя бы одной статьи.
 
-articles: []
+articles:
+  - id: methods/adr
+    title: "ADR (Architecture Decision Record): стандарты и форматы"
+    status: draft
+    sources:
+      - documentation-process/reference/adr-standards.md
+    last_touched: 2026-09-30
+    freshness_notes: "Стабильная тема; проверять версию MADR (последняя зафиксированная: 4.0.0 от 2024-09-17)."
+
+  - id: methods/ears
+    title: "EARS (Easy Approach to Requirements Syntax)"
+    status: draft
+    sources:
+      - documentation-process/reference/ears-notation.md
+    last_touched: 2026-09-30
+    freshness_notes: "Стабильная нотация (2009); проверять синтаксис EARS в Kiro — может дрейфовать."
+
+  - id: methods/rfc-vs-sdd
+    title: "RFC vs SDD: proposal-driven и spec-driven разработка"
+    status: draft
+    sources:
+      - documentation-process/reference/rfc-vs-sdd.md
+    last_touched: 2026-09-30
+    freshness_notes: "Attentive RFC Process — частная практика одной компании; SDD-определение будет уточняться по мере фазы 2 (критика) и фазы 6 (свежий поиск)."
+
+  - id: methods/prd
+    title: "PRD (Product Requirements Document)"
+    status: draft
+    sources:
+      - documentation-process/reference/prd.md
+    last_touched: 2026-09-30
+    freshness_notes: "Стабильная тема (шаблоны Atlassian/Product School)."
+
+  - id: methods/c4-arc42
+    title: "C4 Model + arc42: архитектурная документация"
+    status: draft
+    sources:
+      - documentation-process/reference/architecture-c4-arc42.md
+    last_touched: 2026-09-30
+    freshness_notes: "Стабильная тема; цифры arc42 Quality Model (191/150/55/48) — на дату выжимки."
+
+  - id: methods/research-compendium
+    title: "Research Compendium: воспроизводимые исследовательские пакеты"
+    status: draft
+    sources:
+      - documentation-process/reference/research-compendium.md
+    last_touched: 2026-09-30
+    freshness_notes: "Стабильная тема; раздел о переносе на разработку ПО уточнить после фазы 4 (research-process.md)."
+
+  - id: landscape/bdd-tools
+    title: "BDD и исполняемые спецификации: инструменты"
+    status: draft
+    sources:
+      - documentation-process/reference/bdd-alternatives.md
+    last_touched: 2026-09-30
+    freshness_notes: "Статусы инструментов проверять (SpecFlow EOL 31.12.2024 зафиксирован; Gauge/Karate/Behave активность — на ~2025)."
+
+  - id: landscape/sdd-tools-overview
+    title: "SDD-инструменты: обзор ландшафта (Spec Kit, Kiro, BMAD, OpenSpec, ForgeSDLC)"
+    status: draft
+    sources:
+      - documentation-process/reference/sdd-landscape.md
+    last_touched: 2026-09-30
+    freshness_notes: "Быстро меняется: звёзды GitHub, число интеграций, workflow команд. Пересмотр обязателен в фазе 6 (свежий поиск + spec-weave, Spec Kitty, specs.md) и после фазы 2 (критика OpenSpec/SDD)."

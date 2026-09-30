@@ -22,15 +22,15 @@
 
 | source | статус | куда выгружено | охват / остаток | сессия |
 |---|---|---|---|---|
-| documentation-process/index.md | triaged | kb: карта методов; guide гл.3 | Матрица выбора — вход для гайда | 2026-09-30 |
-| documentation-process/reference/sdd-landscape.md | new | → kb/landscape/sdd-tools-* | | |
-| documentation-process/reference/prd.md | new | → kb/methods/prd.md | | |
-| documentation-process/reference/rfc-vs-sdd.md | new | → kb/methods/rfc.md, kb/principles/ | | |
-| documentation-process/reference/adr-standards.md | new | → kb/methods/adr.md | | |
-| documentation-process/reference/architecture-c4-arc42.md | new | → kb/methods/c4-arc42.md | | |
-| documentation-process/reference/bdd-alternatives.md | new | → kb/landscape/bdd-tools.md | | |
-| documentation-process/reference/ears-notation.md | new | → kb/methods/ears.md | | |
-| documentation-process/reference/research-compendium.md | new | → kb/methods/research-compendium.md | | |
+| documentation-process/index.md | rejected | — | Индексная функция поглощена: формат статьи (5 пунктов) → kb/README.md, матрица выбора → разделы «Сравнение / выбор» KB-статей и guide гл.3 (фаза 7), реестр → kb/meta.yaml. Отдельной ценности сверх этого не несёт | 2026-09-30 |
+| documentation-process/reference/sdd-landscape.md | done | kb/landscape/sdd-tools-overview.md | полный | 2026-09-30 |
+| documentation-process/reference/prd.md | done | kb/methods/prd.md | полный | 2026-09-30 |
+| documentation-process/reference/rfc-vs-sdd.md | done | kb/methods/rfc-vs-sdd.md | полный | 2026-09-30 |
+| documentation-process/reference/adr-standards.md | done | kb/methods/adr.md | полный | 2026-09-30 |
+| documentation-process/reference/architecture-c4-arc42.md | done | kb/methods/c4-arc42.md | полный | 2026-09-30 |
+| documentation-process/reference/bdd-alternatives.md | done | kb/landscape/bdd-tools.md | полный | 2026-09-30 |
+| documentation-process/reference/ears-notation.md | done | kb/methods/ears.md | полный | 2026-09-30 |
+| documentation-process/reference/research-compendium.md | done | kb/methods/research-compendium.md | полный | 2026-09-30 |
 
 ### Группа B — процессы v2 (`inbox/documentation-process-v2/`)
 
@@ -130,3 +130,4 @@
 | Дата | Фаза | Что сделано |
 |---|---|---|
 | 2026-09-30 | 0 | Инвентаризация inbox (74 файла, 6 групп A–F), PLAN.md accepted (Q1–Q3, Q5), STATUS.md создан, журнал идей начат. Пользователь указал входы ideas (инсайты E #1–7, «Симлинки против MOC», B/goals, B/modular-process, C/00) + принцип «избегать ненужного трения»; добавлен протокол отклонений от пути (PLAN §5.4); правило: коммит после каждой фазы |
+| 2026-09-30 | 1 | Группа A поглощена: 8 KB-статей (methods: adr, ears, rfc-vs-sdd, prd, c4-arc42, research-compendium; landscape: bdd-tools, sdd-tools-overview) + kb/README.md (формат статьи) + meta.yaml (8 записей). Все 9 источников A → done |
