@@ -1,0 +1,15 @@
+# Реестр статей базы знаний (KB)
+# Метод: research/PLAN.md §5.2
+#
+# article:
+#   id: kebab-case, совпадает с путём файла относительно research/kb/ без .md
+#   title: заголовок
+#   status: stub | draft | reviewed
+#   sources: пути поглощённых файлов inbox (относительно research/inbox/)
+#   last_touched: YYYY-MM-DD
+#   freshness_notes: что может устареть / что проверить при пересмотре
+#
+# Инвариант покрытия: каждый inbox-файл со статусом done в research/STATUS.md
+# обязан встречаться в sources хотя бы одной статьи.
+
+articles: []
