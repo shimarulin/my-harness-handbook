@@ -244,6 +244,14 @@ articles:
     last_touched: 2026-09-30
     freshness_notes: "Выжимка восстановлена полностью (перезапуск E4: варианты A–D, 3 итерации пересмотра позиции, все сравнительные таблицы). Spec Kitty активно развивается (13k+ commits); specs.md — молодое community (Dec 2025). Перепроверить статус и независимую критику в фазе 6."
 
+  - id: landscape/spec-weave
+    title: "SpecWeave: spec-first AI development с cross-tool handoff"
+    status: draft
+    sources:
+      - README.md
+    last_touched: 2026-09-30
+    freshness_notes: "Молодой нишевый проект (164 звезды на 09.2026, один мейнтейнер); handoff-механика и vskill/verified-skill ecosystem развиваются — перепроверять."
+
   - id: methods/agents-constitution
     title: "AGENTS.md и CONSTITUTION.md: durable context для AI-агентов"
     status: draft

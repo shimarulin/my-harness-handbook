@@ -99,3 +99,14 @@ Bus factor: OpenSpec = 1 («You're betting on these teams as much as these tools
 - Chesbrough: https://martinchesbrough.net/why-spec-driven-development-is-not-about-the-specs-7d3fdf52fac7 (2026-05-28)
 - Thoughtworks Radar (OpenSpec, Assess): https://www.thoughtworks.com/zh-cn/radar/tools/openspec
 - Входные материалы inbox: вся группа `documentation-process-criticism/` (q1×2, g1×2, d1×2)
+
+## Приложение: обновление ландшафта (фаза 6, 09.2026)
+
+Свежий поиск подтверждает и уточняет тезисы корпуса:
+
+- **OpenSpec вырос до 126K звёзд (08.2026)** — против 68K в корпусе. Основная критика (спек-дрейф, advisory verification, multi-repo, плоскость) остаётся в силе; рост adoption не снимает зафиксированные проблемы дизайна.
+- **SpecWeave 3.0 (09.2026)** — прямой ответ на два зафиксированных в корпусе дефицита: cross-tool handoff (против «AI forgets everything between sessions», §2.5/2.7) и блокирующий evidence-gate `task done --run` (отказывает при падающем тесте — против advisory verification, §2.2). Нишевый (164 звезды), один мейнтейнер — bus factor-риск тот же, что у OpenSpec. См. `spec-weave.md`.
+- **Kiro GA с free tier (03.2026, paperclipped.de)** — спек-пайплайн (requirements → design → tasks) подтверждён рабочим для greenfield-фич; критика «overkill для quick edits» воспроизводит тезис экономики внимания (§2.5) — инструмент не для каждой задачи.
+- **Тезис «дешёвый машинный enforcement решает судьбу SDD» подтверждается рынком**: инструменты с блокирующими gate (Spec Kitty Research Mission — guards, SpecWeave — evidence-gate) появились как ответ на зафиксированный в корпусе дефицит advisory verification.
+
+Критика ландшафта не инвалидируется ростом инструментов — она предсказывает, какие механизмы становятся конкурентным преимуществом (enforcement, handoff, evidence).

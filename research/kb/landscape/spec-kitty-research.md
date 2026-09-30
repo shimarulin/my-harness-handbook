@@ -214,7 +214,7 @@ specs.md сильные: Ideation Flow — уникальное покрытие
 - Research в контексте delivery проекта → Spec Kitty Research Mission (adopt), при необходимости adapt через template overrides.
 - Brainstorming до research → specs.md Ideation Flow.
 - Собственная система — только если нужны cross-mission learnings + topic-views как первоклассные механизмы и независимость от форк-модели (вариант D в терминах исследования: свои скрипты поверх notes/+views/, заимствуя evidence-gated guards и CSV-форматы).
-- Полный разбор альтернатив и статус ландшафта: `sdd-tools-overview.md`; пересмотр в фазе 6 (spec-weave, свежий поиск).
+- Полный разбор альтернатив и статус ландшафта: `sdd-tools-overview.md`; cross-tool handoff и переносимая memory — `spec-weave.md` (SpecWeave, дополняющий инструмент: переносит работу и project memory между вендорами/аккаунтами — закрывает «AI forgets everything between sessions» на уровне delivery, чего Research Mission не делает).
 
 ## Источники
 

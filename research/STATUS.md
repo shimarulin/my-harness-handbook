@@ -98,7 +98,7 @@
 
 | source | статус | куда выгружено | охват / остаток | сессия |
 |---|---|---|---|---|
-| inbox/README.md (spec-weave, Spec Kitty, specs.md, Spec Kit) | deferred | → kb/landscape/sdd-tools-* (фаза 6) | Ждёт фазы 6: исследование + свежий поиск | 2026-09-30 |
+| inbox/README.md (spec-weave, Spec Kitty, specs.md, Spec Kit) | done | kb/landscape/spec-weave.md, spec-kitty-research.md (фаза 4+fix), sdd-tools-overview.md (обновление), sdd-criticism.md (приложение) | Spec-weave исследован (сайт + GitHub README v3.0.0); Spec Kitty/specs.md покрыты в фазе 4; Spec Kit — источник решений (toolchain-registry); свежий поиск: OpenSpec 126K (08.2026), Kiro GA free tier, BMAD/Spec Kit статус | 2026-09-30 |
 
 ## Журнал идей-кандидатов (вход для ideas/, фаза 8)
 
@@ -142,6 +142,9 @@
 | Quality gates как серия блокирующих CI-проверок для документации (EARS → coverage → architecture → tests → AI metrics) | v3 07 + v2 metrics | Docs-as-Code gate — реализация принципа invariants-and-gates для артефактов |
 | Error Pattern Dashboard + prevention (prompt templates с anti-patterns, checklists) как механизм обучения процесса | v2 metrics | Замыкает feedback loop: ошибка → pattern → защита в tooling, а не в инструкциях |
 | Ленивая консенсусность (lazy consensus) конфликтует с «молчание ≠ согласие» — зона напряжения | v2 review vs Шапиро | Кандидат на разбор в ideas/: где молчание допустимо (minor), где — нет (accepted) |
+| Cross-tool handoff (hand off / pick up) + project memory, переносимая с кодом (.specweave/memory/) | F (SpecWeave) | Решает «AI forgets everything between sessions» на уровне delivery и переносит durable context между вендорами/аккаунтами — уникальный механизм, кандидат для собственной системы |
+| Блокирующий evidence-gate `task done --run` (отказ при падающем тесте) + append-only ledger (claims, evidence) | F (SpecWeave) | Конкретная реализация invariants-and-gates на уровне задач; ledger — аудируемый след работы агентов |
+| Enforcement/handoff/evidence как конкурентное преимущество SDD-инструментов (подтверждение тезиса критики рынком) | Фаза 6 (свежий поиск) | Тезис «дешёвый машинный enforcement решает судьбу SDD» подтверждён появлением инструментов с блокирующими gate — сигнал для приоритетов собственной системы |
 
 ## Протокол сессии
 
@@ -160,3 +163,4 @@
 | 2026-09-30 | 4 | Группа E поглощена по 4 частям: kb/methods/research-knowledge.md (ч.1), kb/principles/content-stays-virtual-structure.md (ч.2 — инсайты #1–7 + симлинки vs MOC, ядро кандидата в систему), kb/methods/research-tooling.md (ч.3), kb/landscape/spec-kitty-research.md (ч.4). E → done; журнал идей +6 |
 | 2026-09-30 | 5 | Остаток B/C поглощён: 8 статей — methods/agents-constitution, ai-agent-workflows, docs-cicd, review-collaboration, versioning-lifecycle, metrics-dashboards, training-onboarding; principles/process-design-goals. 11 источников → done, 2 корпуса (v2 knowledge-base, v3 01) → rejected (~90% покрытия KB, уникальное учтено). Журнал идей +6. Весь корпус inbox обработан (кроме F — фаза 6) |
 | 2026-09-30 | 4-fix | Восстановление выжимки E4 (была усечена на 264 строках): перезапуск скаута с явным требованием всех 8 секций. Восстановлено: варианты A–D с содержанием, 3 итерации пересмотра позиции («ниша уникальна» → «specs.md покрывает research» → «Spec Kitty — наиболее полный инструмент»), таблицы Spec Kit/Kitty/specs.md + research-поддержка + сопоставление с notes/+views/, команды, 12 URL. kb/landscape/spec-kitty-research.md дополнена (224 строки), статус → reviewed |
+| 2026-09-30 | 6 | Группа F закрыта: spec-weave исследован (сайт + GitHub README v3.0.0 от 2026-09-25) → kb/landscape/spec-weave.md (cross-tool handoff, evidence-gate, ledger, memory). Свежий поиск: OpenSpec 126K (08.2026), Kiro GA free tier, BMAD/Spec Kit статус — обновлены sdd-tools-overview.md и sdd-criticism.md (приложение «тезис enforcement подтверждён рынком»). Журнал идей +3. **Весь корпус inbox обработан (74 файла + F)** |

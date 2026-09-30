@@ -16,8 +16,10 @@
 | **GitHub Spec Kit** | GitHub | 137k+ | Slash commands, 4+1 фаз | Да: 38 интеграций + generic |
 | **Kiro** | AWS | — | IDE/CLI, 3 фазы (Req/Design/Tasks), EARS | Ограничен Kiro ecosystem |
 | **BMAD-METHOD** | BMad Code | 53.5k (6k forks) | 12+ специализированных AI-агентов | Да: через skills |
-| **OpenSpec** | Fission-AI | 68k | Lightweight, /opsx команды, без phase gates | Да: 30+ AI assistants |
+| **OpenSpec** | Fission-AI | 126k (08.2026) | Lightweight, /opsx команды, без phase gates | Да: 30+ AI assistants |
 | **ForgeSDLC** | Forge | — | Event-driven workflow, Jira→PR | Да: через model factory |
+
+> **Обновление 09.2026 (фаза 6):** OpenSpec — 126K звёзд на 08.2026 (aicodingpatterns.com), рост с 68K. Дополняющие инструменты: **SpecWeave** (см. `spec-weave.md` — cross-tool handoff, уникально), **Spec Kitty** (см. `spec-kitty-research.md` — Research Mission, 1.7K звёзд), **specs.md** (Ideation Flow). Kiro — GA с free tier, Pro $19/мес (paperclipped.de 03.2026).
 
 ## Инструменты
 
