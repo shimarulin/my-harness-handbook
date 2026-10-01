@@ -91,6 +91,6 @@ freshness_notes: "<маркер актуальности>"
 
 ## Источники
 
-- Исходный формат: `research/kb/README.md` (до миграции)
+- Исходный формат: `content/kb/README.md` (до миграции)
 - План: `docs/plans/_objects/PLAN-20261001-164751701-repository-structure.md`
 - Research knowledge: `content/kb/methods/research-knowledge.md` (после миграции)

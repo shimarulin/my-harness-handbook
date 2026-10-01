@@ -151,7 +151,7 @@ author: human:<name> | agent:<name>
 
 | Сейчас | Куда | Действие |
 |---|---|---|
-| `research/kb/` | `content/kb/` | Перенос; `README.md` (формат статьи) → `tools/process-framework/conventions/kb-format.md` |
+| `content/kb/` | `content/kb/` | Перенос; `README.md` (формат статьи) → `tools/process-framework/conventions/kb-format.md` |
 | `guide/` | `content/guide/` | Перенос |
 | `ideas/` | `docs/notes/` | Перенос как заметок-зародышей (решение: «Решённые вопросы») |
 | `research/inbox/` | `docs/research/inbox/` | Перенос |
@@ -182,9 +182,9 @@ author: human:<name> | agent:<name>
 ## Источники
 
 - Сессия 2026-10-01: обсуждение структуры репозитория, корректировки пользователя.
-- `research/kb/principles/content-stays-virtual-structure.md` — принцип неперемещаемых файлов и симлинков.
-- `research/kb/methods/research-knowledge.md` — research как процесс, шаблоны, learnings.
-- `research/kb/methods/research-tooling.md` — dual-mode CLI, ядро+интерфейсы, TypeScript vs Python.
+- `content/kb/principles/content-stays-virtual-structure.md` — принцип неперемещаемых файлов и симлинков.
+- `content/kb/methods/research-knowledge.md` — research как процесс, шаблоны, learnings.
+- `content/kb/methods/research-tooling.md` — dual-mode CLI, ядро+интерфейсы, TypeScript vs Python.
 - `research/inbox/about/` — 14 файлов о структуре книги/handbook'а (AI Engineering Handbook, AI-Agent-Architecture).
 - `research/inbox/agents-md/` — материалы для AGENTS.md.
 - Цитата: «Никто не знает, что будет после того, как человек сделает выбор, не поняв, из чего пришлось выбирать» — Матрица: Революция (фиксация research как upstream-фазы).
