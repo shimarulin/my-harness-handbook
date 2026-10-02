@@ -45,6 +45,7 @@ The external tool's format *is* our format for a class. Home = external format, 
 
 - **Use when:** the team's standard already lives in that format (e.g., an OpenSpec `changes/` tree) and our value-add is execution, governance, and audit on top.
 - **Trade-offs (explicit):** deepest dependency — we inherit the external format's evolution. **FR-8.6 migration guarantees do not extend to adopted formats**: we can wrap, pre-check, and warn, but not migrate another tool's format. Likewise FR-2.8: either our validator's regression suite covers the adopted format's failure classes, or the adapter declares the external validator's pass as acceptable gate evidence.
+- And **enforcement is asymmetric in co-owned homes**: FR-2.5 Class B arbitration prevents conflicts only when our archive runs; archives performed by the external tool itself are detected post-hoc via drift/sync (FR-2.2, FR-8.1), not prevented (known unknown #6).
 
 ### Mode B — Bridge-via-schema
 
@@ -169,6 +170,7 @@ Carried from the [README](./README.md#anti-patterns-carried-from-research) and t
 5. **Bridged-flow token overhead.** FR-5.4 cost reports must separate bridged from native flows; no baseline exists yet.
 6. **FR-8.5 archive semantics and concurrent writes against adopted spec-tree conventions (Mode A).** Two distinct questions: (a) delta merge into an adopted canonical tree must follow the adopted format's own merge conventions (ordering, tombstoning, cross-delta resolution) — known unknown #3 covers format *conversion*; this covers merge *semantics*; (b) co-owned homes are written by the external tool routinely, and FR-2.5 Class B arbitration must interoperate with the adopted tool's own conflict behavior (its documented whole-block replace can silently drop scenarios), including the enforcement asymmetry: arbitration prevents conflicts only on our archive; external-performed archives are detected post-hoc. Until verified, Pattern 1's archive step treats the adopted tree's merge rules as authoritative and pre-checks rather than assumes.
 7. **Signature completeness (ground truth).** Declared transition signatures must be verified against the external tool's actual behavior — which legitimate transitions exist — not merely against the adapter's own baseline. Until verified, the disambiguation in adapter template #4 is the honest output: gaps are recorded as `projection.gap`, never silently absent. Verification results feed the conformance corpus (#3).
+   Verification method: external documentation, source inspection where available, and black-box exercise of the external tool's flows — every verified transition becomes a corpus case, making the corpus the accumulating ground truth.
 
 ## Deferred
 
@@ -181,5 +183,6 @@ Carried from the [README](./README.md#anti-patterns-carried-from-research) and t
 - Delivers the external half of P6; FR-6.3's two documented patterns (OpenSpec, Superpowers)
 - **v1.0.1:** post-delivery review applied — adapter/bridge terminology split (Resolution A), Mode C home-claim and tripwire clarifications, co-owned homes with external-writer legality, signature-based per-class event projection, evidence-coverage declaration (Pattern 2), known unknown #6, tool-name placeholder, caveats provenance
 - **v1.0.2:** second review round applied — missing-event disambiguation (phase skip vs. projection gap) with query-time classification and `projection.gap`; closed event vocabulary; KU #6 extended to concurrent writes with the enforcement asymmetry; KU #7 (signature completeness); consumer principle inherited by KU #4; Pattern 1 external-writes reframed as standing mode with Class B concurrent-modification semantics
+- **v1.0.3:** third review round applied — enforcement asymmetry surfaced in the Mode A trade-off list; KU #7 verification method specified (corpus-accumulating)
 - Template-level design per the approved caveats; known unknowns registered
-- Next document: `triggering.md` (terminology and event semantics settled)
+- Next document: `execution-layers.md` (triggering delivered)

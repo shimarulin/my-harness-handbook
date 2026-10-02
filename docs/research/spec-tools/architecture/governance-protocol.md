@@ -13,6 +13,7 @@ This revision (1.1.0) applies the post-review decisions: the authority model (NQ
 Revision 1.1.1 applies the post-acceptance review notes: `spec://` addressability granularity, mission-id allocation deferral to `data-formats.md`, and a corrected signed-manifest wording (no v1 profile requires signatures).
 Revision 1.1.2 refines two wordings from the composition review: `spec://` mission-record resolution semantics (the record exists from mission start as the live index), and the signed-manifest CP formulation (a new normative requirement extending FR-1.4 / touching NFR-3, not a modification of either).
 Revision 1.2.0 closes the event-vocabulary question and adds a detection signal, both from the second composition review: the taxonomy is declared **closed** (core-defined; adapters map to existing types only; extension via protocol versioning), a `projection.gap` event type records query-time classification of unobservable transitions, and the consumer principle (absence of an event is not evidence of absence) is stated for all downstream consumers.
+Revision 1.2.1 refines the consumer principle by emitter class (projected vs. core-emitted), records the `projection.gap` lifecycle (append-only observation, query-time resolution), and states its status as a core-emitted diagnostic relative to the rejected adapter namespace.
 
 ## Design constraints honored
 
@@ -96,7 +97,11 @@ payload:                    # type-specific structured data
 
 **The vocabulary is closed and core-defined.** Adapters (per [`composition.md`](./composition.md)) map external transitions to *existing* core types only and may not declare new event types. Extension happens through protocol versioning: new core types ship in a protocol release, and the ignore-unknown-types rule is what makes such releases backward-compatible for existing consumers. A reserved adapter namespace (`adapter.<vendor>.<type>`) was considered and rejected: events with no core consumer are ceremony under P2, and an adapter-writable log would make the NQ-L audit guarantees dependent on adapter discipline. Consumers subscribe to the defined set and must ignore unknown types (forward compatibility against future protocol versions).
 
-**Consumer principle.** Events are *observations*, not truth: the absence of an event is absence of evidence, never evidence of absence. Consumers needing authoritative state fall back to artifacts (NQ-L). This principle governs every downstream consumer of projected events — gates, tripwires, and the interference detection deferred to [`triggering.md`](./triggering.md).
+**`projection.gap` status.** It escapes both rejection prongs: it is **core-emitted** — a diagnostic about the projection layer's own health, produced by the core detection pass — not an adapter-declared observation of external activity, and it is consumed by core-owned surfaces (the observability gap filter, FR-4.2; the adapter-maintenance and KU #7 verification workflows). The P2 ceremony criterion targets adapter-declared external-activity events with no core consumer; it does not apply here.
+
+**Consumer principle (two emitter classes).** **Projected events** — derived by adapters from external activity — are *observations*, not truth: their absence is absence of evidence, never evidence of absence. Consumers needing authoritative state fall back to artifacts (NQ-L). **Core-emitted events** carry evidential force: emission is bound to the completion of the core actions the taxonomy anchors (committed atomically with the action's artifacts), so for those actions the absence of the event *is* evidence of absence — a tripwire signal (no `change.archived` after a completed mission means archive did not run). Artifacts remain the final authority for state under NQ-L; the event is the signal, not the truth. Scope caveat: core silence is meaningful only for anchored actions — unanchored activity (manual edits under FR-1.2) emits nothing by design. Consumers must classify by emitter: never treat projected-event silence as non-happening; do treat core-event silence as a tripwire about core actions. This governs gates, tripwires, and the interference detection in [`triggering.md`](./triggering.md).
+
+**`projection.gap` lifecycle.** A gap event is an immutable historical observation; resolution is not a log event. The event payload carries the transition reference (artifact and diff identifiers), so resolution is derived at query time by re-matching that transition against the adapter's *current* signature set; auditability comes from the versioned adapter declaration (FR-6.2, git history), and each newly covered transition becomes a conformance-corpus case (composition KU #3/#7). No `projection.gap.resolved` type is added — resolution is derivable and no consumer needs it as a separate event (P2). The log stays append-only under NQ-L.
 
 ### Subscription, gating, and the gate/trigger separation
 
@@ -203,7 +208,7 @@ Defining the minimal contract here — rather than in `data-formats.md` — remo
 
 ## Protocol versioning
 
-One semver for both facets; major versions synchronized (NQ-C). Protocol-produced artifacts (event records, manifests, digests) are subject to FR-8.6's migration classes once released; pre-release layout revisions require no migration. Current: **1.2.0** — added the authority model, log structure/compaction, session identity, identifier contract, and gate/trigger separation (1.1.0); wording refinements (1.1.1–1.1.2); closed event vocabulary, `projection.gap` detection type, and the consumer principle (1.2.0). All pre-release; no migration obligations yet.
+One semver for both facets; major versions synchronized (NQ-C). Protocol-produced artifacts (event records, manifests, digests) are subject to FR-8.6's migration classes once released; pre-release layout revisions require no migration. Current: **1.2.1** — added the authority model, log structure/compaction, session identity, identifier contract, and gate/trigger separation (1.1.0); wording refinements (1.1.1–1.1.2); closed event vocabulary, `projection.gap` detection type, and the consumer principle (1.2.0); emitter-class refinement of the consumer principle and the `projection.gap` lifecycle (1.2.1). All pre-release; no migration obligations yet.
 
 ## Governance layer runtime (pluggable)
 
@@ -227,6 +232,7 @@ All three are disableable (P6); the protocol's event log and the core tool-gates
 - Answers Q2, Q6 (with NQ-B/C/I mechanisms); records NQ-L, NQ-P, NQ-Q
 - Review items 1–8 applied; post-acceptance notes 1–3 applied; composition-review refinements applied (mission-record resolution, signed-manifest CP formulation)
 - Second composition review applied: closed event vocabulary, `projection.gap` detection type, consumer principle
+- Third review round applied: consumer principle split by emitter class; `projection.gap` lifecycle and core-emitted status
 - Honors NFR constraints 1–5 (README)
-- Protocol version: 1.2.0 (both facets, synchronized)
-- Next document: [`triggering.md`](./triggering.md) (unblocked; terminology settled)
+- Protocol version: 1.2.1 (both facets, synchronized)
+- Next document: [`execution-layers.md`](./execution-layers.md) (triggering delivered)
