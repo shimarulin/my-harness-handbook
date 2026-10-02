@@ -13,8 +13,8 @@ The requirements phase is closed. This phase realizes those requirements without
 | [`governance-protocol.md`](./governance-protocol.md) | Q2 + Q6: the unified internal contract — event schema + rule representation | baseline event points (FR-3.5, FR-3.6, FR-4.x) |
 | [`composition.md`](./composition.md) | P6 + FR-6.3: external contract — bridge schemas, artifact ownership, surface separation with existing tools | governance-protocol (internal contract first) |
 | [`triggering.md`](./triggering.md) | Q3 + NQ-A/K/H: trigger mechanisms, middleware plugin conditions, secondary metric | governance-protocol (event schema) |
-| [`execution-layers.md`](./execution-layers.md) | FR-3.x, FR-5.x, FR-8.x: subagent context assembly, review cycles, arbitration, cost reporting | governance-protocol (rule representation) |
-| [`data-formats.md`](./data-formats.md) | Q5 + NQ-E/I: spec tree addressability, link classes, cache keys, migration formats | governance-protocol (decision record format) |
+| [`execution-layers.md`](./execution-layers.md) | FR-3.x, FR-5.x, FR-8.x: subagent context assembly, review cycles, arbitration, cost reporting | governance-protocol (rule representation, session identity) |
+| [`data-formats.md`](./data-formats.md) | Q5 + NQ-E/I: spec tree addressability, link classes, cache keys, migration formats | governance-protocol (decision record format; extends the `spec://` identifier contract defined there) |
 
 Build order: **governance-protocol → composition → triggering → execution-layers → data-formats**. The first is the largest open architectural surface and the input to the rest; each subsequent document consumes its outputs.
 
@@ -53,7 +53,7 @@ The corresponding positive constraint is FR-6.3's acceptance criterion: **one de
 - CP process: active; register complete; NQ-F confirmed (per-repo)
 - Architecture phase: started 2026-10-02
   - [x] README (this document) — map, shared contract, constraints, anti-patterns
-  - [ ] governance-protocol.md — Q2 + Q6 unified contract (in progress)
+  - [x] governance-protocol.md — Q2 + Q6 unified contract (v1.1.0: review items 1–8 applied; NQ-L/P/Q recorded)
   - [ ] composition.md — external contract
   - [ ] triggering.md — Q3 mechanisms
   - [ ] execution-layers.md — FR-3/5/8 realization
