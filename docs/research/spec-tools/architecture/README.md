@@ -55,6 +55,6 @@ The corresponding positive constraint is FR-6.3's acceptance criterion: **one de
   - [x] README (this document) — map, shared contract, constraints, anti-patterns
   - [x] governance-protocol.md — Q2 + Q6 unified contract (v1.2.1: closed event vocabulary, `projection.gap` detection type and lifecycle, consumer principle by emitter class; NQ-L/P/Q recorded)
   - [x] composition.md — external contract (v1.0.3: adapter/bridge terminology, ownership matrix, adapter template with missing-event disambiguation, documented patterns for OpenSpec and Superpowers, KU #1–7)
-  - [x] triggering.md — Q3 mechanisms (v1.0.0: hooks + trigger list + tool-gates, gate-forced remedial invocation, FR-3.1/NQ-H metrics, middleware plugin conditions, harness coexistence)
-  - [ ] execution-layers.md — FR-3/5/8 realization
+  - [x] triggering.md — Q3 mechanisms (v1.0.1: hooks + trigger list + tool-gates, gate-forced remedial dispatch with two-channel resolution, FR-3.1 metric grounded in corpus labels, middleware plugin conditions, harness coexistence)
+  - [x] execution-layers.md — FR-3/5/8 realization (v1.0.0: subagent assembly, review-cycle state machine, gate runtime with dispatch, cost reporting, reference corpus, signed-manifest verification)
   - [ ] data-formats.md — Q5 + formats + migrations

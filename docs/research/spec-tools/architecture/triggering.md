@@ -40,7 +40,7 @@ Where no hook surface exists, a compact always-loaded list carries **match condi
 
 This is the essential difference from Superpowers' bootstrap, which bundles trigger conditions with compliance language ("IF A SKILL APPLIES TO YOUR TASK, YOU DO NOT HAVE A CHOICE"): compliance has moved to gates, so the list shrinks to predicates and pointers. Per-harness placement (system prefix, rules file) and the entry format are deferred to [data-formats.md](./data-formats.md).
 
-Deterministic predicates are preferred (`test-failure`, `error-in-tool-output`). Skills with no machine-observable applicability predicate may be explicit-only — FR-3.1 permits up to 20% — and are marked as such in the list.
+Deterministic predicates are preferred (`test-failure`, `error-in-tool-output`). **Predicate semantics follow the carrier mechanism:** on the hooks path, conditions are evaluated as code by tool-side hook logic — deterministic; on the fallback path, the list is read by the agent as natural-language match conditions over context — stochastic, and this document claims no more than that for the fallback. Skills with no machine-observable applicability predicate may be explicit-only — FR-3.1 permits up to 20% — and are marked as such in the list.
 
 ### 3. Tool-gates (universal backstop, core)
 
@@ -55,13 +55,15 @@ Every discipline skill is force-triggerable by an explicit command (FR-3.1 AC), 
 A gate that blocks on missing evidence names the evidence and may dispatch the skill that produces it:
 
 - The invocation occurs without an explicit user command, so it **counts toward the FR-3.1 rate** — the reading recorded post-freeze — and is audited separately as **remedial** (NQ-H).
-- **Loop bound:** one remedial dispatch per gate blocking per review cycle. Persistent failure is not retried; it escalates as an interrupt (FR-3.6) or a review rejection (FR-8.4) — never a gate↔skill ping-pong.
+- **Loop bound:** one remedial dispatch per gate blocking per review cycle (the cycle of the FR-8.4 state machine, see [execution-layers.md](./execution-layers.md)). Persistent failure is not retried; it escalates as an interrupt (FR-3.6) or a review rejection (FR-8.4) — never a gate↔skill ping-pong.
+
+**Dispatch mechanism (open — known unknown #6).** "Dispatch" mechanically means: the gate names the producing skill and invokes it through a delivery channel that must exist and be reliable across harnesses. The open question is which channel: our command surface is the one guaranteed cross-harness channel (FR-6.1) but is user-facing and absent in CI/headless contexts where gates run; harness hooks, where present, are tool-side but not universal. Until resolved, "universal backstop" is the design claim and the gate's *blocking* is the hard guarantee — dispatch is resolved in [`execution-layers.md`](./execution-layers.md), which owns the gate runtime.
 
 This is where triggering and compliance meet: the gate does not trust the skill, it trusts the evidence the skill produces — and blocks again if the evidence is still absent.
 
 ## Metrics
 
-- **Primary (FR-3.1):** auto-trigger rate over the reference corpus — the fraction of applicable skill invocations occurring without an explicit user command. Target ≥80%, single threshold, all harnesses.
+- **Primary (FR-3.1):** auto-trigger rate over the reference corpus — the fraction of applicable skill invocations occurring without an explicit user command, **where "applicable" is judged by corpus ground-truth labels, not by our runtime predicates** (a predicate-judged rate is self-graded: an always-on predicate scores 100% on itself). Runtime predicate logs serve as debugging evidence, never as the score. This also keeps the rate comparable with external measurements (MCP.Directory's Superpowers evaluation, Superpowers' own v6 evals), which counted invocations against external controls. Target ≥80%, single threshold, all harnesses.
 - **Secondary (NQ-H, observability-only in v1):** the preemptive/remedial split, reported per mission in cost reports (FR-5.4). No target in v1 — a number set before the corpus baseline exists is either gamified or dead letter. The corpus run establishes the baseline; setting a target afterward is a CP (it adds an acceptance criterion to FR-3.1).
 - **Audit trail:** trigger decisions are logged (FR-3.1 AC) — core-emitted, hence authoritative about our invocations; this log is the artifact basis for interference classification below.
 
@@ -71,8 +73,8 @@ Middleware/proxy inspection of assistant traffic is **not part of the core combo
 
 1. Disabled by default.
 2. Subordinate to the kill switch (NFR-3): disabling it removes only the plugin's contribution; the core combo is unaffected.
-3. Privacy analysis against NFR-3 before marketplace listing.
-4. Data-handling disclosure as part of the listing (extending FR-6.8's permission disclosure).
+3. Privacy analysis against NFR-2 (local-first) before marketplace listing: a cloud-hosted middleware is a direct violation; a local one requires data-handling analysis of the sensitive-content observation point (prompts, code, specs).
+4. Security disclosure of the observation surface — what traffic it inspects, what it retains — extending FR-6.8's permission/scope-disclosure machinery to the listing.
 
 ## Harness coexistence (composition KU #4)
 
@@ -89,6 +91,7 @@ When our skills coexist with external skill sets (e.g., Superpowers installed al
 3. **Cross-fire behavior and doubled ambient cost** (inherited from composition KU #4).
 4. **Remedial-bound calibration:** whether one dispatch per gate per cycle is the right bound.
 5. **Trigger-list vs. coexistence budget:** the interaction between our always-loaded list and external skill sets' metadata under a shared context ceiling.
+6. **Gate-to-skill dispatch mechanism:** the reliable cross-harness channel by which a blocked gate delivers the remedial invocation — command surface, hooks where present, or an internal path — with CI/headless contexts as the hard case. Resolved in [execution-layers.md](./execution-layers.md), which owns the gate runtime.
 
 ## Deferred
 
@@ -100,5 +103,5 @@ When our skills coexist with external skill sets (e.g., Superpowers installed al
 
 - Answers Q3; records NQ-A/K/H mechanisms; inherits the consumer principle (emitter classes) and the gate/trigger separation
 - Honors NFR constraints 1–5 (README)
-- Version 1.0.0
+- Version 1.0.1: NFR-2 misreference fixed (middleware condition 3), primary metric grounded in corpus ground-truth labels, KU #6 (gate-to-skill dispatch) registered, remedial bound anchored to the FR-8.4 cycle, predicate semantics stated per carrier mechanism
 - Next document: `execution-layers.md`
