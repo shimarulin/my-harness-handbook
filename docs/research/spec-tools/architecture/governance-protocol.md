@@ -12,6 +12,7 @@ Per NQ-C, this is **one versioned contract with two facets** — event schema an
 This revision (1.1.0) applies the post-review decisions: the authority model (NQ-L: artifacts-as-primary, log as audit), log structure and compaction (NQ-P: per-mission logs, cross-mission stream, compaction on archive), the session identity contract (NQ-Q), a minimal `spec://` identifier contract, and the gate-vs-trigger separation.
 Revision 1.1.1 applies the post-acceptance review notes: `spec://` addressability granularity, mission-id allocation deferral to `data-formats.md`, and a corrected signed-manifest wording (no v1 profile requires signatures).
 Revision 1.1.2 refines two wordings from the composition review: `spec://` mission-record resolution semantics (the record exists from mission start as the live index), and the signed-manifest CP formulation (a new normative requirement extending FR-1.4 / touching NFR-3, not a modification of either).
+Revision 1.2.0 closes the event-vocabulary question and adds a detection signal, both from the second composition review: the taxonomy is declared **closed** (core-defined; adapters map to existing types only; extension via protocol versioning), a `projection.gap` event type records query-time classification of unobservable transitions, and the consumer principle (absence of an event is not evidence of absence) is stated for all downstream consumers.
 
 ## Design constraints honored
 
@@ -91,8 +92,11 @@ payload:                    # type-specific structured data
 | `arbitration.resolved` | arbitration verdict | archive unblocking |
 | `change.archived` | FR-8.5 | spec-tree merge, tracker sync (opt-in) |
 | `unknown.resolved` | FR-2.10 flow | spec update, validation |
+| `projection.gap` | core detection pass (gates, tripwire checks, CI — see composition.md, adapter template #4): a phase-relevant artifact transition matched no declared signature | adapter maintenance, signature-completeness verification (KU #7), observability |
 
-The taxonomy is open: layer implementations may subscribe to the closed set above and must ignore unknown types (forward compatibility).
+**The vocabulary is closed and core-defined.** Adapters (per [`composition.md`](./composition.md)) map external transitions to *existing* core types only and may not declare new event types. Extension happens through protocol versioning: new core types ship in a protocol release, and the ignore-unknown-types rule is what makes such releases backward-compatible for existing consumers. A reserved adapter namespace (`adapter.<vendor>.<type>`) was considered and rejected: events with no core consumer are ceremony under P2, and an adapter-writable log would make the NQ-L audit guarantees dependent on adapter discipline. Consumers subscribe to the defined set and must ignore unknown types (forward compatibility against future protocol versions).
+
+**Consumer principle.** Events are *observations*, not truth: the absence of an event is absence of evidence, never evidence of absence. Consumers needing authoritative state fall back to artifacts (NQ-L). This principle governs every downstream consumer of projected events — gates, tripwires, and the interference detection deferred to [`triggering.md`](./triggering.md).
 
 ### Subscription, gating, and the gate/trigger separation
 
@@ -199,7 +203,7 @@ Defining the minimal contract here — rather than in `data-formats.md` — remo
 
 ## Protocol versioning
 
-One semver for both facets; major versions synchronized (NQ-C). Protocol-produced artifacts (event records, manifests, digests) are subject to FR-8.6's migration classes once released; pre-release layout revisions require no migration. Current: **1.1.0** — added the authority model, log structure/compaction, session identity, identifier contract, and gate/trigger separation; storage layout revised prior to any release.
+One semver for both facets; major versions synchronized (NQ-C). Protocol-produced artifacts (event records, manifests, digests) are subject to FR-8.6's migration classes once released; pre-release layout revisions require no migration. Current: **1.2.0** — added the authority model, log structure/compaction, session identity, identifier contract, and gate/trigger separation (1.1.0); wording refinements (1.1.1–1.1.2); closed event vocabulary, `projection.gap` detection type, and the consumer principle (1.2.0). All pre-release; no migration obligations yet.
 
 ## Governance layer runtime (pluggable)
 
@@ -222,6 +226,7 @@ All three are disableable (P6); the protocol's event log and the core tool-gates
 
 - Answers Q2, Q6 (with NQ-B/C/I mechanisms); records NQ-L, NQ-P, NQ-Q
 - Review items 1–8 applied; post-acceptance notes 1–3 applied; composition-review refinements applied (mission-record resolution, signed-manifest CP formulation)
+- Second composition review applied: closed event vocabulary, `projection.gap` detection type, consumer principle
 - Honors NFR constraints 1–5 (README)
-- Protocol version: 1.1.2 (both facets, synchronized)
+- Protocol version: 1.2.0 (both facets, synchronized)
 - Next document: [`triggering.md`](./triggering.md) (unblocked; terminology settled)
