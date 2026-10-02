@@ -53,8 +53,8 @@ The corresponding positive constraint is FR-6.3's acceptance criterion: **one de
 - CP process: active; register complete; NQ-F confirmed (per-repo)
 - Architecture phase: started 2026-10-02
   - [x] README (this document) — map, shared contract, constraints, anti-patterns
-  - [x] governance-protocol.md — Q2 + Q6 unified contract (v1.1.0: review items 1–8 applied; NQ-L/P/Q recorded)
-  - [ ] composition.md — external contract
+  - [x] governance-protocol.md — Q2 + Q6 unified contract (v1.1.1: review items 1–8 and post-acceptance notes 1–3 applied; NQ-L/P/Q recorded)
+  - [x] composition.md — external contract (v1.0.0: composition modes, ownership matrix, bridge template, documented patterns for OpenSpec and Superpowers)
   - [ ] triggering.md — Q3 mechanisms
   - [ ] execution-layers.md — FR-3/5/8 realization
   - [ ] data-formats.md — Q5 + formats + migrations
