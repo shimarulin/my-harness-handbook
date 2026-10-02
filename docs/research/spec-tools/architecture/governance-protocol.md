@@ -11,6 +11,7 @@ Per NQ-C, this is **one versioned contract with two facets** — event schema an
 
 This revision (1.1.0) applies the post-review decisions: the authority model (NQ-L: artifacts-as-primary, log as audit), log structure and compaction (NQ-P: per-mission logs, cross-mission stream, compaction on archive), the session identity contract (NQ-Q), a minimal `spec://` identifier contract, and the gate-vs-trigger separation.
 Revision 1.1.1 applies the post-acceptance review notes: `spec://` addressability granularity, mission-id allocation deferral to `data-formats.md`, and a corrected signed-manifest wording (no v1 profile requires signatures).
+Revision 1.1.2 refines two wordings from the composition review: `spec://` mission-record resolution semantics (the record exists from mission start as the live index), and the signed-manifest CP formulation (a new normative requirement extending FR-1.4 / touching NFR-3, not a modification of either).
 
 ## Design constraints honored
 
@@ -179,7 +180,7 @@ Privacy: no secrets, minimal PII (NFR-3); manifests are scanned like any artifac
 
 ### Optional enhancement: signed manifests
 
-Cryptographic signing (manifest signatures, signed commits with session trailers, attestation artifacts) would add tamper-evidence and non-repudiation for NFR-3 audit trails. It is **not part of the v1 contract**: it brings key management, revocation, offline constraints (NFR-2, FR-6.7), and install weight (NFR-5). No v1 profile requires signatures. `execution-layers.md` may specify the verification mechanism — where a signature would be checked, should the capability ever be enabled — but making any strictness profile or other normative surface require signed manifests is a change to FR-1.4 or NFR-3 and requires an accumulated CP, with a second reviewer when NFR-3 is affected, per the change-proposal process.
+Cryptographic signing (manifest signatures, signed commits with session trailers, attestation artifacts) would add tamper-evidence and non-repudiation for NFR-3 audit trails. It is **not part of the v1 contract**: it brings key management, revocation, offline constraints (NFR-2, FR-6.7), and install weight (NFR-5). No v1 profile requires signatures. `execution-layers.md` may specify the verification mechanism — where a signature would be checked, should the capability ever be enabled — but any mandate for signed manifests is a **new normative requirement**: where it attaches to profile semantics it extends FR-1.4, and where it affects audit integrity it touches NFR-3; either way it is an accumulated CP, with a second reviewer when NFR-3 is affected, per the change-proposal process.
 
 ## Identifier contract: `spec://` (minimal)
 
@@ -190,7 +191,7 @@ spec://<repo>/<class>/<id>
 
 - `<repo>` is the configured repository identifier — the Q5 future-proofing (repo-identifier addressability); single-repo v1 resolves the local default.
 - Resolution is local and offline (NFR-2), against the repository's artifact tree.
-- **Addressability granularity:** event-log records are not individually addressable; the mission — and, after compaction, the mission record — is the single addressable entry point for mission-scoped activity.
+- **Addressability granularity:** individual event-log records are not `spec://`-addressable. `spec://…/missions/<id>` resolves to the mission record — created at mission start as the mission's live index, folded with event detail at compaction — which is thus the only `spec://`-addressable unit for mission-scoped activity. Physical resolution targets are defined in `data-formats.md`.
 - Link classes (broken vs. unresolvable, NQ-E) and cross-repo resolution semantics are extended in `data-formats.md`, which owns the artifact tree.
 - The scheme follows FR-8.6 migration classes once artifacts exist in the wild.
 
@@ -215,12 +216,12 @@ All three are disableable (P6); the protocol's event log and the core tool-gates
 - External bridging of this protocol to OpenSpec/Superpowers surfaces → [`composition.md`](./composition.md)
 - Skill-trigger mechanisms consuming `phase.completed` / interrupt events → [`triggering.md`](./triggering.md)
 - Subagent package assembly details, review-cycle state machine, signed-manifest verification mechanism → [`execution-layers.md`](./execution-layers.md)
-- Artifact tree unification (sessions/events paths), `spec://` extensions (link classes, cross-repo resolution, resolution mappings for bridge-declared non-core homes per [`composition.md`](./composition.md)), mission-id allocation semantics (repo-local ULID in v1; repo-qualified URIs provide global addressability), format migrations → [`data-formats.md`](./data-formats.md)
+- Artifact tree unification (sessions/events paths), `spec://` extensions (link classes, cross-repo resolution, resolution mappings for adapter-declared non-core homes per [`composition.md`](./composition.md)), mission-id allocation semantics (repo-local ULID in v1; repo-qualified URIs provide global addressability), format migrations → [`data-formats.md`](./data-formats.md)
 
 ## Status
 
 - Answers Q2, Q6 (with NQ-B/C/I mechanisms); records NQ-L, NQ-P, NQ-Q
-- Review items 1–8 applied; post-acceptance notes 1–3 applied (addressability granularity, mission-id allocation deferral, signed-manifest wording)
+- Review items 1–8 applied; post-acceptance notes 1–3 applied; composition-review refinements applied (mission-record resolution, signed-manifest CP formulation)
 - Honors NFR constraints 1–5 (README)
-- Protocol version: 1.1.1 (both facets, synchronized)
-- Next document: [`composition.md`](./composition.md) (delivered)
+- Protocol version: 1.1.2 (both facets, synchronized)
+- Next document: [`triggering.md`](./triggering.md) (unblocked; terminology settled)
