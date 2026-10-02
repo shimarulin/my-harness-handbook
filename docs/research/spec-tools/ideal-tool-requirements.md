@@ -6,10 +6,15 @@ This document defines requirements for a hypothetical tool that combines the str
 
 **Tools analyzed:** specs.md, OpenSpec, obra/superpowers, Spec Kitty, GitHub Spec Kit, BMAD, Kiro, Tessl, GSD.
 
+**Document conventions:**
+- Every functional requirement (FR) in this document carries acceptance criteria. No exceptions.
+- "Non-trivial" is defined in P3. Enforcement precedence between ceremony levels and strictness profiles is defined in FR-1.4.
+
 **Revision history:**
 - v1 (2026-10-02): Initial requirements derived from spec-tools research.
 - v1.1 (2026-10-02): Merged alternative requirements review r1. Added P6 (modular composition), FR-2.6–FR-2.9, FR-3.3 rule-inheritance clarification, FR-4.6, FR-5.5, FR-6.5–FR-6.6, FR-8.4–FR-8.5, Section 9 (project governance and maturity), NFR-5, strengthened NFR-2/NFR-3, expanded avoided-patterns table. Resolved Open Question 1 in favor of modular composition.
 - v1.2 (2026-10-02): Applied machine review of v1.1. Fixed internal contradictions: FR-6.1 assistant count (expanded to 10 named), FR-4.2/FR-6.4 dashboard conditionality, FR-6.6/FR-9.1 unified deprecation policy, NFR-3/FR-4.3 per-integration opt-in, NFR-2/FR-4.2 local-vs-team dashboard split. Added FR-1.4 (strictness profiles), FR-2.10 (progressive elaboration), FR-2.11 (no pseudocode), FR-3.7 (systematic debugging), FR-6.7 (cloud-agnostic). Clarified FR-3.3 (enumerated inheritance list, minimal context package). Defined conflict classes (FR-2.5), non-trivial (P3), auto-trigger measurement (FR-3.1), validator regression suite (FR-2.8), review safety valve (FR-8.4), marketplace security (FR-9.3). Extended FR-6.2 to configuration-as-repo-artifact. Added acceptance criteria to all requirements introduced in v1.1.
+- v1.3 (2026-10-02): Applied machine review of v1.2. Resolved ceremony-vs-strictness precedence conflict (FR-1.1, FR-1.4, FR-2.2): strictness profiles override ceremony enforcement defaults; minimal inline acceptance criteria generated at Trivial under strict profiles. Fixed FR-3.3 acceptance criterion (removed Open Question reference; made measurable). Added acceptance criteria to all remaining FRs (FR-1.2–1.3, FR-2.1–2.4, FR-3.1–3.6, FR-4.1, FR-4.3–4.5, FR-5.1–5.4, FR-6.3–6.4, FR-7.1–7.5, FR-8.1–8.3). Refined FR-6.7 (tool operations vs. assistant network needs). Replaced "where feasible" reversibility in migrations with defined classes. Restructured former Section 9: product-facing requirements moved to FR-6.8 (secure marketplace) and FR-8.6 (migration tooling); project-governance items relabeled as non-product commitments PG-1–PG-3. Updated all cross-references.
 
 ---
 
@@ -36,7 +41,7 @@ Artifacts must persist as reviewable, versioned records without becoming bureauc
 The tool must verify that code honors the spec, not merely that spec files exist.
 
 - **Evidence:** OpenSpec's own documentation acknowledges "it only checks that artifacts exist, not that code honors them"; critical analysis across SDD tools finds "agents frequently ignore detailed specifications"; the spec-implementation gap is the most cited failure mode.
-- **Requirement:** Automated spec-compliance verification must run on every non-trivial change. Throughout this document, **non-trivial** means a change executed at Standard or Critical ceremony level (FR-1.1); Trivial-level changes are exempt from mandatory enforcement.
+- **Requirement:** Automated spec-compliance verification must run on every non-trivial change. Throughout this document, **non-trivial** means a change executed at Standard or Critical ceremony level (FR-1.1); Trivial-level changes are exempt from mandatory enforcement **unless a strictness profile extends enforcement to them (FR-1.4)**.
 
 ### P4. Token Efficiency
 
@@ -80,7 +85,7 @@ The tool must support selecting ceremony level per task, not per project.
 **Acceptance criteria:**
 - User can specify ceremony level via single flag or config
 - Tool auto-detects complexity and suggests level (user can override)
-- Trivial mode skips spec generation entirely for tasks under a configurable threshold
+- Trivial mode skips spec generation by default for tasks under a configurable threshold; **exception:** where a strictness profile (FR-1.4) enforces spec-dependent disciplines at Trivial ceremony, a minimal inline acceptance-criteria artifact is generated instead, preserving the Trivial token budget
 - Critical mode requires spec review before implementation begins
 
 **Traces to:** specs.md FIRE flow adaptive checkpoints; OpenSpec's "skip it for a typo fix"; Superpowers' "bypass it explicitly for trivia."
@@ -92,6 +97,11 @@ The tool must allow mid-feature course correction without discarding completed w
 - **Evidence:** BMAD scores 5/5 for "Mid-feature course correction" while Spec Kit scores 2/5; OpenSpec allows editing any artifact at any time with no phase gates; SDD critical analysis notes "agents over-apply or misinterpret instructions" requiring correction.
 - **Requirement:** Modifying a spec mid-implementation must trigger delta propagation to affected tasks, not a full restart.
 
+**Acceptance criteria:**
+- A mid-implementation spec edit propagates only to tasks whose acceptance criteria it touches; unaffected tasks and their results survive unchanged
+- Affected tasks are flagged for re-verification rather than regenerated from scratch
+- The propagation is logged, listing each affected task and the spec clause that changed
+
 #### FR-1.3: Exploratory Mode
 
 The tool must support exploratory/spike work without forcing premature specification.
@@ -99,16 +109,25 @@ The tool must support exploratory/spike work without forcing premature specifica
 - **Evidence:** Superpowers criticism notes "you're exploring, not building... spikes, prototypes, and 'what does this codebase even do' sessions fight the plan-first structure"; specs.md's Ideation Flow (Spark → Flame → Forge) exists specifically for this.
 - **Requirement:** An exploratory mode must produce concept briefs, not implementation specs, and must not count toward project spec debt.
 
+**Acceptance criteria:**
+- Exploratory sessions produce concept briefs only; no implementation specs, plans, or task lists are generated
+- Concept briefs are excluded from canonical spec-tree validation and from spec-debt metrics
+- Transitioning from exploration to implementation routes through the spec phase; briefs can seed but do not substitute for specs
+
 #### FR-1.4: Strictness Profiles
 
 Enforcement intensity of individual disciplines must be configurable independently of process weight, via named strictness profiles with per-setting overrides.
 
 - **Evidence:** The r1 review requires profiles "from vibe coding to a militarized process," noting that hard gates must not be mandatory for all tasks. Ceremony levels (FR-1.1) control process weight; they do not by themselves permit, e.g., a heavyweight process with relaxed TDD or a lightweight one with strict drift detection. Superpowers' single fixed discipline bundle is the counter-example: "bypass it explicitly for trivia" is the documented escape hatch.
-- **Requirement:** The tool must provide named strictness presets — at minimum **vibe** (all discipline enforcement advisory), **balanced** (ceremony-level defaults), and **strict** (TDD and drift detection enforced even at Trivial ceremony; adversarial review on all changes) — and every discipline toggle (TDD enforcement, review depth, drift detection, verbosity limits) must be individually configurable, overriding any preset.
-- **Acceptance criteria:**
-  - Switching profiles changes only enforcement behavior; no project state or artifacts are lost or regenerated
-  - Every discipline toggle is individually settable at project and task level
-  - The effective configuration (profile plus overrides) is inspectable via a single command and stored per FR-6.2
+- **Requirement:** The tool must provide named strictness presets — at minimum **vibe** (all discipline enforcement advisory), **balanced** (ceremony-level defaults), and **strict** (TDD and drift detection enforced even at Trivial ceremony, via the minimal inline acceptance criteria of FR-1.1; adversarial review on all changes, performed as a lightweight merge-time gate at Trivial) — and every discipline toggle (TDD enforcement, review depth, drift detection, verbosity limits) must be individually configurable, overriding any preset.
+
+  **Precedence rule:** Strictness profiles override ceremony-level enforcement defaults (including FR-2.2 and FR-3.2). The ceremony level governs artifact volume and process weight; the effective strictness profile governs enforcement intensity. A profile never changes ceremony-level artifact volume beyond the minimal inline artifact required to give enforcement a referent.
+
+**Acceptance criteria:**
+- Switching profiles changes only enforcement behavior; no project state or artifacts are lost or regenerated
+- Every discipline toggle is individually settable at project and task level
+- The effective configuration (profile plus overrides) is inspectable via a single command and stored per FR-6.2
+- Under the strict profile at Trivial ceremony: a minimal inline acceptance-criteria artifact exists, drift detection runs against it, and a merge-time review gate executes — while total token overhead remains within the Trivial budget of FR-1.1
 
 ---
 
@@ -121,12 +140,22 @@ Specifications must use delta format (ADDED, MODIFIED, REMOVED) rather than full
 - **Evidence:** OpenSpec's delta format is purpose-built for modifications and won independent comparison for specification quality (4/5) vs Spec Kit's 2/5; critical analysis notes "Spec-Kit requires `/speckit.clarify` workaround, not optimized for small changes."
 - **Requirement:** Every spec change must express only what is changing, with automatic merge into the canonical spec tree upon archive.
 
+**Acceptance criteria:**
+- A one-field change produces a delta referencing only that field and its requirement
+- Archiving merges the delta into the canonical tree without rewriting untouched requirements
+- The canonical spec is reconstructible from the archive history alone
+
 #### FR-2.2: Spec Drift Detection
 
 The tool must detect and alert when implementation diverges from specification.
 
 - **Evidence:** Critical analysis identifies "spec drift over time" as an unresolved question; OpenSpec's `/opsx:verify` exists specifically for this but requires explicit invocation; the spec-implementation gap is "the most cited failure mode."
-- **Requirement:** Automated drift detection must run on every PR for non-trivial changes (per P3), comparing implementation against spec acceptance criteria.
+- **Requirement:** Automated drift detection must run on every PR for non-trivial changes (per P3). A strictness profile may extend enforcement to Trivial-level changes per the precedence rule in FR-1.4; the ceremony-level default alone never disables an explicitly enforced discipline.
+
+**Acceptance criteria:**
+- Drift detection runs on every PR for Standard and Critical changes without manual invocation
+- Under a strict profile, it also runs for Trivial changes against their minimal inline acceptance criteria
+- Divergences are reported as spec-clause ↔ code-location pairs and gate the merge
 
 #### FR-2.3: Rejected-Proposal Memory
 
@@ -135,12 +164,22 @@ The tool must remember declined proposals to prevent re-proposing rejected ideas
 - **Evidence:** OpenSpec's documentation acknowledges `/opsx:archive` has "no dedicated status for a declined change, so nothing tells a future proposal that an idea was already investigated and turned down."
 - **Requirement:** Declined changes must be archived with reasoning and be searchable by future proposals.
 
+**Acceptance criteria:**
+- A declined change archives with a machine-readable decision record including the reason
+- A new proposal touching the same area surfaces the prior rejection and its reasoning
+- Rejections are searchable via a single command by requirement, date, and reason
+
 #### FR-2.4: Spec Verbosity Control
 
 The tool must enforce spec length limits appropriate to change scope.
 
 - **Evidence:** OpenSpec's most-cited complaint: "The AI generates way more spec than I need... an agent can turn a thirty-minute feature into an 800-line spec"; the 50KB context limit forces some discipline but "delta specs themselves have no hard limit."
 - **Requirement:** Configurable spec size limits per ceremony level; automatic flagging when specs exceed thresholds; agent must justify why a spec exceeds the limit.
+
+**Acceptance criteria:**
+- Size limits are configurable per ceremony level and enforced at generation time
+- An over-limit spec is flagged and cannot be finalized without an explicit justification entry
+- Default limits keep a Standard-ceremony spec within the token budget of FR-1.1
 
 #### FR-2.5: Parallel-Change Conflict Resolution
 
@@ -149,11 +188,11 @@ The tool must handle multiple in-flight changes touching the same requirement or
 - **Evidence:** OpenSpec documented edge case: "Two changes touched the same requirement and one silently dropped the other's scenario... archiving applies a MODIFIED delta as a whole-block replace keyed by requirement name." The r1 review additionally flags conflicts in shared state files (e.g., `state.yaml`) when parallel agents run in separate worktrees; Spec Kitty's original worktree-per-work-package strategy was itself unstable enough to be replaced in v3.1.0.
 - **Requirement:** Concurrent modifications must be detected before merge/archive and resolved according to conflict class:
   - **Class A — independent** (different requirements, different files): auto-merge; never blocks
-  - **Class B — same-requirement** (two in-flight changes modify the same requirement): human arbitration required before archive; both versions presented with their scenarios
+  - **Class B — same-requirement** (two in-flight changes modify the same requirement): human arbitration required before archive; both versions presented with their scenarios. The arbitrator is the **accountable owner** for the affected area, routed via the decision mechanism of FR-4.1; the verdict is recorded as a decision record per FR-4.4
   - **Class C — shared state files** (e.g., worktree coordination state such as `state.yaml`): three-way merge attempted automatically; unresolved conflicts escalate to human review
 - **Acceptance criteria:**
   - Class A changes merge without interaction
-  - Class B changes always block archive until arbitration; neither version is silently dropped
+  - Class B changes always block archive until arbitration; neither version is silently dropped; the arbitration verdict is a linked, versioned artifact
   - Class C merge attempts are logged; failures present a readable conflict for resolution
 
 #### FR-2.6: Greenfield Spec Generation
@@ -162,10 +201,11 @@ The tool must support full-spec generation for new systems, not only delta chang
 
 - **Evidence:** Spec Kit is rated 5/5 for greenfield work ("Constitution-driven governance... purpose-built for greenfield") while OpenSpec scores 3/5 ("lightweight, better suited for modifications than greenfield"); specs.md targets both greenfield and brownfield across its flows; the r1 review requires explicit support for both.
 - **Requirement:** A greenfield mode must produce complete requirement, design, and task specifications from a project brief, while reusing the same artifact formats as brownfield delta specs so projects can transition between modes without migration.
-- **Acceptance criteria:**
-  - Greenfield mode produces requirement, design, and task specs from a project brief in one session
-  - Greenfield artifacts use the same formats as brownfield delta specs; no format migration is needed when the project becomes brownfield
-  - Transitioning a repository from greenfield to brownfield requires no artifact conversion
+
+**Acceptance criteria:**
+- Greenfield mode produces requirement, design, and task specs from a project brief in one session
+- Greenfield artifacts use the same formats as brownfield delta specs; no format migration is needed when the project becomes brownfield
+- Transitioning a repository from greenfield to brownfield requires no artifact conversion
 
 #### FR-2.7: Spec Formality Spectrum
 
@@ -173,10 +213,11 @@ Specifications must support a spectrum of formality, from lightweight notes to f
 
 - **Evidence:** OpenSpec delta specs use formal SHALL-language scenarios ("The app SHALL let users switch between light and dark themes"); SDD critical analysis notes ongoing confusion about "where functional specs end and technical implementation begins" and inconsistent interpretation across tools; the r1 review requires "levels of detail: from light notes to formal SHALL/MUST requirements."
 - **Requirement:** Spec templates must support at least three formality levels — note-style, structured scenario, formal SHALL/MUST with testable acceptance criteria — selectable per requirement and upgradeable in place without rewriting.
-- **Acceptance criteria:**
-  - Any requirement can be expressed at any formality level
-  - A requirement upgrades in place (note → scenario → SHALL/MUST) without rewriting sibling requirements
-  - Formal-level requirements carry testable acceptance criteria; note-level requirements are valid without them
+
+**Acceptance criteria:**
+- Any requirement can be expressed at any formality level
+- A requirement upgrades in place (note → scenario → SHALL/MUST) without rewriting sibling requirements
+- Formal-level requirements carry testable acceptance criteria; note-level requirements are valid without them
 
 #### FR-2.8: Reliable Spec Validation
 
@@ -184,10 +225,11 @@ Spec validation commands must be deterministic and robust; validator failures mu
 
 - **Evidence:** The r1 requirements review reports validation bugs of the "no requirement entries parsed" class in existing tools; OpenSpec ships `openspec validate` as a core command, making the validator a single point of failure for CI integration.
 - **Requirement:** Validation must produce unambiguous pass/fail results with error locations pointing at the offending lines; validation failures must block archive/merge. The validator must ship with a regression suite covering **every documented failure class** (including parse failures of the "no requirement entries parsed" kind), with at least one test per class; failure classes discovered in the wild must be added to the suite before the next release.
-- **Acceptance criteria:**
-  - CI runs the validator regression suite on every release
-  - No documented failure class lacks a regression test
-  - Validator errors identify file and line; a spec that fails to parse can never validate as true
+
+**Acceptance criteria:**
+- CI runs the validator regression suite on every release
+- No documented failure class lacks a regression test
+- Validator errors identify file and line; a spec that fails to parse can never validate as true
 
 #### FR-2.9: Monorepo and Hierarchical Standards
 
@@ -195,10 +237,11 @@ The tool must support monorepositories with nested projects, independent per-mod
 
 - **Evidence:** specs.md's FIRE flow provides "hierarchical standards with module-specific overrides. One project, multiple tech stacks"; OpenSpec's 50KB context cap is a partial mitigation but not a monorepo design; the r1 review explicitly requires nested projects with independent configurations and no "instruction growth."
 - **Requirement:** Sub-project configuration must inherit and override repository-level standards; context injected into agents must be scoped to the affected module and its ancestors; unrelated sibling modules must not inflate the context of work on a given module.
-- **Acceptance criteria:**
-  - A module's context contains its own standards plus inherited repository standards, and no sibling-module standards
-  - Adding a sibling module does not change the context payload of work on an existing module
-  - Per-module overrides are expressible without editing repository-level defaults
+
+**Acceptance criteria:**
+- A module's context contains its own standards plus inherited repository standards, and no sibling-module standards
+- Adding a sibling module does not change the context payload of work on an existing module
+- Per-module overrides are expressible without editing repository-level defaults
 
 #### FR-2.10: Progressive Elaboration
 
@@ -206,10 +249,12 @@ Specifications must be allowed to start incomplete and be elaborated iteratively
 
 - **Evidence:** Spec Kit's templates "flag unknowns as NEEDS CLARIFICATION rather than guessing" — the strongest existing implementation of this pattern; the r1 review requires that the tool "not demand exhaustive data at the start — context must be built up iteratively." Contrast with elicitation flows that force completeness before any work begins.
 - **Requirement:** A spec containing explicitly marked unknowns must be valid, and its known portions implementable. Unknowns must use a standard, searchable marker; agents must never silently resolve them. Implementation tasks depending on unresolved unknowns must be blocked until resolution.
-- **Acceptance criteria:**
-  - A spec with marked unknowns passes validation and is implementable for known requirements
-  - Resolving an unknown updates the spec in place via delta
-  - Tasks blocked on unknowns report the blocking marker
+
+**Acceptance criteria:**
+- A spec with marked unknowns passes validation and is implementable for known requirements
+- Resolving an unknown updates the spec in place via delta
+- Tasks blocked on unknowns report the blocking marker
+- A spec in which a marked unknown was resolved without recorded human input fails validation (silent resolution is detectable and rejected)
 
 #### FR-2.11: No Pseudocode in Business-Facing Specs
 
@@ -217,10 +262,11 @@ Business-facing spec layers must contain no pseudocode or implementation-like no
 
 - **Evidence:** The r1 review requires "Markdown + schemas, but without sliding into pseudocode"; Dilger's critique documents business stakeholders unable to engage with tool output. In practice, agents frequently turn requirement specs into pseudocode, which defeats FR-7.3's plain-language review.
 - **Requirement:** The business-facing layers of a spec (requirements, scenarios, acceptance criteria) must not contain pseudocode, code-like notation, or implementation language. Implementation detail belongs exclusively to the plan and task layers.
-- **Acceptance criteria:**
-  - Spec linting flags pseudocode-like constructs in business-facing layers
-  - Plain-language summaries are generated without code notation
-  - Business-facing and technical artifacts are structurally separated (distinct files or sections)
+
+**Acceptance criteria:**
+- Spec linting flags pseudocode-like constructs in business-facing layers
+- Plain-language summaries are generated without code notation
+- Business-facing and technical artifacts are structurally separated (distinct files or sections)
 
 ---
 
@@ -233,12 +279,22 @@ Discipline skills must trigger automatically based on context, not require expli
 - **Evidence:** Superpowers' auto-trigger model is praised: "The agent doesn't *decide* to brainstorm; the brainstorming skill triggers because the user mentioned a vague idea"; contrasted with Spec Kit's "human types `/speckit.plan`. Explicit, deterministic."
 - **Requirement:** At least 80% of discipline skills must auto-trigger; users must be able to force-trigger any skill explicitly. The auto-trigger rate is measured over a reference corpus of representative tasks as the fraction of applicable skill invocations that occur without an explicit user command.
 
+**Acceptance criteria:**
+- Over the reference corpus, ≥80% of applicable skill invocations occur without an explicit user command
+- Every discipline skill is force-triggerable by explicit command
+- Trigger decisions are logged so the rate is auditable
+
 #### FR-3.2: Mandatory TDD (Configurable)
 
 Test-Driven Development must be enforced by default for standard and critical ceremony levels, with opt-out for trivial.
 
 - **Evidence:** Superpowers' "Iron Law" of TDD is its defining characteristic: "No production code without a failing test first"; a controlled comparison found better output quality on non-trivial tasks with TDD enforcement.
 - **Requirement:** TDD enforcement must be on by default, configurable per-project and per-task (including via strictness profiles, FR-1.4), with automatic deletion of implementation code written before tests.
+
+**Acceptance criteria:**
+- Under an enforcing profile and ceremony level, implementation code written before a failing test is deleted or blocked from merging
+- Per-task opt-outs are recorded in the mission log with the opting user
+- Under the vibe profile, enforcement is advisory: violations warn but do not block
 
 #### FR-3.3: Subagent Isolation with Rule Inheritance
 
@@ -258,7 +314,7 @@ Each implementation task must execute in an isolated context, but subagents must
   - Subagent prompts verifiably contain the constitution and effective enforcement settings
   - A subagent attempting to skip TDD under an enforcing profile is blocked
   - The context package is bounded in size, and its token cost is reported (FR-5.4)
-  - The mechanism must avoid the recurring token cost of a full always-loaded bootstrap (Open Question 6)
+  - No always-loaded bootstrap is injected into subagent context: governance rules are attached per-task to the context package, and the per-task inheritance overhead is measured and reported under FR-5.4 (the question of minimizing that overhead remains Open Question 6)
 
 #### FR-3.4: Adversarial Review (Not Confirmatory)
 
@@ -267,12 +323,22 @@ Plan and spec review must attempt to break the plan, not merely confirm complete
 - **Evidence:** GitHub issue #1803 on Superpowers: "The built-in writing-plans self-review is confirmatory — it checks coverage, types, and placeholders. It does not attempt to break the plan... Claude in 'completion state' produces plans that look correct but contain silent failures."
 - **Requirement:** Review phase must explicitly instruct the reviewer to trace intermediate states, run commands mentally, and verify assumptions against the actual codebase.
 
+**Acceptance criteria:**
+- Review prompts instruct the reviewer to attempt to break the plan, not merely confirm coverage
+- Unverified shell commands and environment assumptions are surfaced as findings
+- Findings are categorized by fix type (surface fix, architectural issue, wrong problem)
+
 #### FR-3.5: Context-Clearing Guidance
 
 The tool must indicate when context can safely be cleared between phases.
 
 - **Evidence:** Superpowers issue #655: "It provides no guidance as to when context can safely be cleared (/clear) between phases. From start to finish, it stayed on the same context... 80k tokens of baggage that will degrade the accuracy of future generation?"
 - **Requirement:** After each phase completion, the tool must indicate whether context can be cleared and what minimal state must be preserved.
+
+**Acceptance criteria:**
+- On each phase completion, the tool states whether context may be cleared, without being asked
+- The preserved minimal state (file paths, mission pointer, active deltas) is enumerated in the guidance
+- Resuming from cleared context loses no mission state
 
 #### FR-3.6: Human-in-the-Loop Interrupts
 
@@ -281,16 +347,22 @@ The agent must pause and ask when implementation deviates from plan or encounter
 - **Evidence:** Superpowers issue #655: "Claude Code seems to generally be blazing through on its own without ever stopping to ask me stuff if things aren't going according to plan... Claude kept trying to YOLO it by playing around with critical arguments."
 - **Requirement:** Configurable interrupt triggers for: plan deviation, external tool errors, assumption invalidation, and scope expansion.
 
+**Acceptance criteria:**
+- Each trigger condition (plan deviation, external tool error, assumption invalidation, scope expansion) pauses the agent with a question rather than an autonomous workaround
+- Resumption requires a user response; the exchange is logged
+- Triggers are individually enabled/disabled per project and per task
+
 #### FR-3.7: Systematic Debugging Skill
 
 A systematic-debugging skill must auto-trigger on errors and enforce root-cause analysis before fix attempts.
 
 - **Evidence:** Superpowers ships `systematic-debugging` and `verification-before-completion` among its core skills; the r1 review lists systematic debugging among the required engineering disciplines alongside TDD, verification, and review.
 - **Requirement:** The debugging skill must trigger automatically when the agent encounters an error or failing test, and must enforce the sequence: reproduce → isolate → hypothesize → test hypothesis → fix → verify. Fixes attempted without a reproduction must be rejected.
-- **Acceptance criteria:**
-  - The skill triggers on error detection without user invocation
-  - Fix proposals without a reproduction step are rejected by the workflow
-  - Invocations produce a debug-log artifact linked to the task (FR-4.6)
+
+**Acceptance criteria:**
+- The skill triggers on error detection without user invocation
+- Fix proposals without a reproduction step are rejected by the workflow
+- Invocations produce a debug-log artifact linked to the task (FR-4.6)
 
 ---
 
@@ -302,6 +374,11 @@ Important decisions must be surfaced to relevant stakeholders before agent conti
 
 - **Evidence:** Spec Kitty's Decision Moments "widen those moments by moving the question into a Slack or Teams thread, so the people who need to participate can weigh in before the agent continues."
 - **Requirement:** Decisions affecting deployment policy, domain language, architecture, customer impact, or migration strategy must be routable to accountable/consulted/informed parties.
+
+**Acceptance criteria:**
+- Decisions in the listed categories route to designated stakeholders (via chat thread or equivalent) before the agent proceeds
+- Routing targets are configurable per decision category
+- An unresolved decision blocks the agent; the block and its resolution are logged
 
 #### FR-4.2: Cross-Team Observability (Conditional Dashboard)
 
@@ -321,12 +398,22 @@ External trackers (Linear, Jira, GitHub Issues) must remain the source of truth 
 - **Evidence:** Spec Kitty's design: "a developer can pull a ticket from Linear or Jira into the Spec Kitty CLI and turn it into a full mission... While the work is being implemented, Spec Kitty keeps the ticket updated so the team's normal tracker remains useful."
 - **Requirement:** Two-way sync with at least Linear, Jira, and GitHub Issues; tracker status must update automatically as agent work progresses. Tracker sync is **opt-in per integration**: consent is recorded as a versioned repository file (NFR-3), sync actions are logged, and consent is revocable at any time — revocation halts sync without data loss.
 
+**Acceptance criteria:**
+- Tracker ticket status reflects mission state without manual edits, in both directions (ticket → mission, mission → ticket)
+- Each integration's consent is a separate, versioned, reviewable file; revoking it halts that integration's sync without losing repository state
+- Every sync action is logged with timestamp and direction
+
 #### FR-4.4: Living Project Memory
 
 The tool must maintain a searchable, durable record of decisions, specs, and evidence.
 
 - **Evidence:** Spec Kitty's `kitty-specs` wiki: "specs, plans, evidence, review trails, and Decision Moment ADRs... not just ceremony. They are a living wiki of how the software is being changed"; compared to Karpathy's advocacy for "LLM-maintained Markdown knowledge bases."
 - **Requirement:** All decisions, specs, plans, and review results must be stored as versioned, searchable, linked artifacts in the repository.
+
+**Acceptance criteria:**
+- Every decision, spec, plan, and review result exists as a versioned, linked artifact in the repository
+- Artifacts are searchable by content and navigable via their link graph
+- No decision or review outcome exists only in chat history or ephemeral state
 
 #### FR-4.5: Onboarding and Context Recovery
 
@@ -335,16 +422,22 @@ New team members and fresh sessions must be able to recover project context from
 - **Evidence:** SDD critical analysis notes "long-term maintenance: unclear maintenance story, risk of spec drift, may abandon specs after initial development"; OpenSpec's archive mechanism creates durable current-state description.
 - **Requirement:** A single command must generate a comprehensive project context summary from stored artifacts, sufficient for a new session or team member to understand current state.
 
+**Acceptance criteria:**
+- A single command produces a context summary covering active missions, current specs, open decisions, and recent changes
+- The summary is generated entirely from stored artifacts — no session history required
+- A fresh session resumed from the summary alone can continue an in-flight mission
+
 #### FR-4.6: Traceability Reporting
 
 The tool must provide queryable traceability: what was built, by whom (which agent or human), and on the basis of which requirements and decisions.
 
 - **Evidence:** Spec Kitty positions itself as providing "an auditable delivery record from first decision to merge"; the SDD critical analysis lists "who maintains specifications during bug fixes?" among unresolved questions; the r1 review requires visible "who/what/why" metrics.
 - **Requirement:** Every merged change must link to the originating requirement(s), the decision records that shaped it, the implementing agent/session, and the review verdicts. A single command must produce a traceability report for any artifact or requirement.
-- **Acceptance criteria:**
-  - Every merged change links to originating requirement(s), decision records, implementing session, and review verdicts
-  - A single command produces a traceability report in both directions (requirement → changes → code; code → change → requirement)
-  - Broken links fail CI
+
+**Acceptance criteria:**
+- Every merged change links to originating requirement(s), decision records, implementing session, and review verdicts
+- A single command produces a traceability report in both directions (requirement → changes → code; code → change → requirement)
+- Broken links fail CI
 
 ---
 
@@ -357,12 +450,22 @@ Each phase must have configurable token budgets with alerts on overrun.
 - **Evidence:** Superpowers' optimization history: v5.0.6 removed subagent review loops after "~25 minutes of overhead with no measurable quality gain"; v6.0.0 achieved "up to 50% faster and up to 60% cheaper"; yet "no amount of optimization makes a design interview free."
 - **Requirement:** Token usage must be tracked per phase; alerts must fire when budget exceeded; tool must suggest which phase to simplify.
 
+**Acceptance criteria:**
+- Per-phase budgets are configurable and actual usage is recorded per phase
+- Budget overrun raises an alert naming the exceeded phase
+- The alert includes a suggestion of which phase to simplify or skip
+
 #### FR-5.2: Progressive Disclosure
 
 Only relevant context should be loaded at each phase, not the full project state.
 
 - **Evidence:** Superpowers' progressive disclosure: "~100 tokens per skill for always-loaded metadata, skill bodies under 5k tokens loaded only on trigger"; Anthropic's documented approach.
 - **Requirement:** Context injection must be scoped to current task; irrelevant project state must not consume context window.
+
+**Acceptance criteria:**
+- The context payload for a task contains only task-relevant spec deltas, plans, and standards
+- Dormant skills cost only their always-loaded metadata (bounded, per-skill)
+- Injected context for unrelated modules or missions is measurable as zero
 
 #### FR-5.3: Worktree Isolation with Cleanup
 
@@ -371,6 +474,11 @@ Parallel work must use isolated worktrees with automatic cleanup on merge.
 - **Evidence:** Spec Kitty pioneered "built-in git worktree support among SDD tools... Automatic worktree creation per feature, Parallel feature isolation without branch switching, Automated cleanup on merge"; Superpowers' "Using Git Worktrees: Isolated branches with verified test baselines."
 - **Requirement:** Worktree management must be automatic, with configurable strategy (per-feature or per-swim-lane) and cleanup on completion.
 
+**Acceptance criteria:**
+- Parallel tasks receive isolated worktrees and branches without manual git commands
+- Merge (or rejection) triggers worktree and branch cleanup automatically
+- Strategy is configurable per project; no orphaned worktrees remain after mission completion
+
 #### FR-5.4: Cost Reporting
 
 The tool must report token and time cost per mission, phase, and task.
@@ -378,16 +486,22 @@ The tool must report token and time cost per mission, phase, and task.
 - **Evidence:** The "hidden costs of spec-driven development" analysis identifies six cost types teams forget to track; MCP.Directory's controlled comparison found "runs 9% cheaper with 14% fewer tokens" on non-trivial tasks.
 - **Requirement:** Post-mission reports must include: total tokens, tokens per phase, time elapsed, and comparison to project baseline.
 
+**Acceptance criteria:**
+- Every completed mission produces a report with total tokens, per-phase tokens, and elapsed time
+- The report includes comparison against the project's running baseline
+- Subagent context-package overhead (FR-3.3) is itemized in the report
+
 #### FR-5.5: Context Caching and Summarization
 
 The tool must reduce token consumption through caching and summarization of previously established context.
 
 - **Evidence:** Superpowers v6.0.0 achieved "up to 50% faster and up to 60% cheaper" partly by pre-generating review inputs; progressive disclosure keeps dormant skills cheap; the r1 review explicitly requires "selective context loading, caching, summarization."
 - **Requirement:** Phase outputs must be cached and reused across sessions where unchanged; long-running context must be summarizable into compact form for downstream phases; cache invalidation must be automatic on spec or plan change.
-- **Acceptance criteria:**
-  - Re-running an unchanged phase consumes <10% of the original generation tokens
-  - Cache invalidates automatically when spec or plan inputs change
-  - Summarized context is explicitly flagged and distinguishable from primary artifacts
+
+**Acceptance criteria:**
+- Re-running an unchanged phase consumes <10% of the original generation tokens
+- Cache invalidates automatically when spec or plan inputs change
+- Summarized context is explicitly flagged and distinguishable from primary artifacts
 
 ---
 
@@ -399,6 +513,11 @@ The tool must work with at least 10 AI coding assistants without lock-in.
 
 - **Evidence:** OpenSpec supports "30+ assistants including Claude Code, Cursor, GitHub Copilot, Gemini CLI, Codex, Kiro, and OpenCode"; Superpowers has first-class plugin packages for multiple harnesses (Antigravity, Codex, Cursor, Devin CLI, Gemini CLI, GitHub Copilot CLI, OpenCode, Qwen Code, and others); Kiro's lock-in is rated "high" risk.
 - **Requirement:** Support for Claude Code, Cursor, GitHub Copilot, Gemini CLI, Codex, OpenCode, Windsurf, Antigravity, Devin CLI, and Qwen Code — at least 10 named assistants — plus an extensible plugin architecture for others.
+
+**Acceptance criteria:**
+- Each named assistant is supported via a documented integration
+- Adding a new assistant requires no core changes, only a plugin
+- No capability is exclusive to a single assistant
 
 #### FR-6.2: Repository-Native Storage and Configuration
 
@@ -418,12 +537,22 @@ The tool must support combination with complementary tools via documented schema
 - **Evidence:** The `superpowers-bridge` schema for OpenSpec redirects Superpowers output into OpenSpec change folders; spec-coding.dev recommends "one planning tool (OpenSpec for fluid, brownfield changes, Spec Kit for a stricter lifecycle) plus Superpowers for execution."
 - **Requirement:** Export/import mechanisms for spec artifacts; documented combination patterns with at least Superpowers and OpenSpec.
 
+**Acceptance criteria:**
+- Spec artifacts export and re-import losslessly (round-trip preserves semantics)
+- A documented, tested combination exists with at least OpenSpec and with Superpowers
+- Combination avoids duplicate artifacts: one designated home per artifact type
+
 #### FR-6.4: CLI-First with Optional Dashboard
 
 Core functionality must work entirely from CLI; dashboards are optional enhancements.
 
 - **Evidence:** OpenSpec is "a free, open-source CLI... does not write code by itself or replace Claude Code, Codex, Cursor, or GitHub Copilot"; Spec Kitty's dashboard is "visual kanban boards tracking work progress" but CLI-first.
 - **Requirement:** All operations must be scriptable; the dashboard must be an optional layer, not a dependency.
+
+**Acceptance criteria:**
+- Every operation is expressible as a CLI command (including in CI)
+- Removing or never installing the dashboard loses no capability
+- Dashboard state is derived from repository state, not held only in the dashboard
 
 #### FR-6.5: IDE-Agnostic Operation
 
@@ -441,7 +570,7 @@ The tool must work from any editor or no editor at all; no functionality may req
 Documentation must include examples and migration guides; command names must be unambiguous and conflict-free, with a single unified deprecation policy.
 
 - **Evidence:** OpenSpec's most-cited namespace criticism: "Why `/opsx:*`? This is awkward, hard to remember because 'opsx' is not 'openspec', so I have to take a minute to think about what I'm writing"; spec-coding.dev warns that tracked tools "ship new releases every few weeks, so treat the command names as current rather than permanent."
-- **Requirement:** Command namespaces must be consistent with the tool name; every command must have `--help` documentation. **Unified deprecation policy (referenced by FR-9.1):** deprecation notices must appear at least one minor version before removal, and deprecated commands/aliases must remain functional through at least one major version. Every breaking change must ship with a migration guide.
+- **Requirement:** Command namespaces must be consistent with the tool name; every command must have `--help` documentation. **Unified deprecation policy (adherence is a project commitment, PG-1):** deprecation notices must appear at least one minor version before removal, and deprecated commands/aliases must remain functional through at least one major version. Every breaking change must ship with a migration guide.
 - **Acceptance criteria:**
   - Renamed commands keep old names functional through one major version, emitting deprecation warnings
   - Every command documents usage and examples via `--help`
@@ -449,14 +578,26 @@ Documentation must include examples and migration guides; command names must be 
 
 #### FR-6.7: Cloud and SaaS Agnostic
 
-The tool must not require any specific cloud, SaaS, or hosting; complete local operation must be available.
+The tool itself must not require any specific cloud, SaaS, or hosting; the tool's own operations must be network-independent. Network needs of the AI assistant are the assistant's concern, not a tool lock-in.
 
-- **Evidence:** Kiro's lock-in is rated "high — Kiro IDE + Claude Sonnet only"; the r1 review extends vendor-independence beyond AI agent and IDE to cloud: "the tool must not dictate a specific AI agent, IDE, or cloud."
-- **Requirement:** The core workflow (spec → plan → implement → review → archive) must complete with zero network dependency. Any hosted features (team dashboard, cross-repo sync) must be optional add-ons with local alternatives or graceful degradation.
+- **Evidence:** Kiro's lock-in is rated "high — Kiro IDE + Claude Sonnet only"; the r1 review extends vendor-independence beyond AI agent and IDE to cloud: "the tool must not dictate a specific AI agent, IDE, or cloud." The v1.2 review notes the original formulation ("full workflow with zero network dependency") was unachievable because implementation is typically performed by cloud-based assistants.
+- **Requirement:** All tool-native operations (spec authoring, validation, archive, orchestration bookkeeping, local dashboard, drift detection) must complete with no outbound network from the tool itself. The tool must function with any assistant, local or cloud; no feature may require a specific cloud provider account or hosted service. Any hosted features (team dashboard, cross-repo sync) must be optional add-ons with local alternatives or graceful degradation.
 - **Acceptance criteria:**
-  - The full workflow completes in an environment with no outbound network
-  - Hosted features degrade to local equivalents or disable cleanly with notice
-  - No feature requires a specific cloud provider account
+  - All tool-native operations complete in an environment where the tool itself has no outbound network (assistant connectivity excluded from this test)
+  - The tool works identically with a local assistant and a cloud assistant
+  - No feature requires a specific cloud provider account; hosted features degrade cleanly with notice
+
+#### FR-6.8: Secure Community Marketplace
+
+The community schema/skill marketplace must enforce signing, verification, permission disclosure, and sandboxed execution.
+
+- **Evidence:** OpenSpec's community schema catalog (which lists `superpowers-bridge`) demonstrates the marketplace pattern; the v1.1 review flags that community skills/schemas are executable content (code and prompts) and require signing, verification, sandboxing, and a review policy.
+- **Requirement:** Marketplace items must be cryptographically signed and verified at install (unsigned items refuse to install by default); installs must disclose requested permissions; skills must execute sandboxed with least privilege — no network or filesystem access beyond declared scopes — and scope violations must be blocked and logged; a review policy gates listings.
+- **Acceptance criteria:**
+  - Unsigned marketplace items cannot be installed under default settings
+  - Install-time permission disclosure precedes any grant
+  - Sandbox scope violations are blocked and logged
+  - Listings carry review status; unreviewed items are labeled as such
 
 ---
 
@@ -469,12 +610,22 @@ The specification interview must understand the problem before proposing technic
 - **Evidence:** Martin Dilger's critique of Spec Kitty: "The third question was already about the tech stack. That confused me. Shouldn't we spend some more time understanding the problem first? Then it came up with a 'domain model' almost immediately... before it had any real grasp of the problem."
 - **Requirement:** Elicitation must follow a structured sequence: problem understanding → domain modeling → constraint identification → technical approach. Tech stack questions must not appear before problem understanding is confirmed.
 
+**Acceptance criteria:**
+- The elicitation sequence is enforced: technical-approach questions are blocked until problem understanding is recorded
+- The session transcript shows the phase of each question
+- Attempting to skip ahead (e.g., to tech stack) before confirmation is refused or flagged
+
 #### FR-7.2: Structured Question Flow
 
 Questions must follow logical domain boundaries, not jump arbitrarily between features.
 
 - **Evidence:** Dilger: "The requirements covered a few different functionalities, and the questions came back in arbitrary order, jumping between features with no structure... A business stakeholder would have no idea if they're supposed to answer feature by feature or think about the whole system at once."
 - **Requirement:** Questions must be grouped by feature or domain concept; the tool must indicate which feature/domain is being discussed.
+
+**Acceptance criteria:**
+- Every question is labeled with the feature or domain it addresses
+- The flow completes one feature's questions before opening another, unless the user explicitly switches
+- Arbitrary interleaving of features within a single question thread does not occur
 
 #### FR-7.3: Business-Stakeholder Comprehensible Output
 
@@ -483,6 +634,11 @@ Non-technical stakeholders must be able to participate in spec review.
 - **Evidence:** Dilger's critique that "a business stakeholder on the other end of that conversation would have no idea" how to engage; SDD positioning for enterprise requires cross-functional participation.
 - **Requirement:** Spec output must include a plain-language summary comprehensible to non-technical reviewers; technical details must be clearly separated from business requirements.
 
+**Acceptance criteria:**
+- Every spec generates a plain-language summary alongside the technical artifacts
+- Business-facing content contains no implementation notation (enforced with FR-2.11)
+- A non-technical reviewer can approve or reject requirements from the summary alone
+
 #### FR-7.4: Artifact Volume Control
 
 The tool must not generate excessive markdown files for simple features.
@@ -490,12 +646,22 @@ The tool must not generate excessive markdown files for simple features.
 - **Evidence:** Dilger: "We ended up with 46 markdown files after 20 min... Twenty minutes in, you have fifty markdown files. Who is reading all of that? Who is maintaining it?"
 - **Requirement:** Maximum artifact count per ceremony level; automatic consolidation when possible; explicit warning when artifact count exceeds threshold.
 
+**Acceptance criteria:**
+- Artifact-count limits are defined per ceremony level and enforced
+- Exceeding a threshold triggers a warning and a consolidation offer
+- A Trivial-ceremony change produces at most the minimal artifact set (one change record plus optional inline criteria)
+
 #### FR-7.5: Failed-Experiment Recovery
 
 When spec-driven approach fails to produce better results, the tool must support graceful fallback.
 
 - **Evidence:** The dev.to OpenSpec experiment: "The new front-end looked almost identical to the original. Not exactly the premium UI redesign I was hoping for... I removed OpenSpec entirely and created a file called Instructions.md."
 - **Requirement:** A "simplified mode" must extract core instructions from failed spec attempts into a minimal format for direct agent execution.
+
+**Acceptance criteria:**
+- A single command extracts core instructions from existing spec artifacts into a minimal instruction file
+- The extracted file is directly executable by an agent without the tool's workflow
+- Extraction preserves the original artifacts for later retrospective (nothing is destroyed)
 
 ---
 
@@ -508,6 +674,11 @@ When code changes outside the spec workflow (hotfix, manual edit), specs must be
 - **Evidence:** Critical analysis: "What happens when specs and code diverge?... Spec-First Tools: unclear maintenance story, risk of spec drift, may abandon specs after initial development."
 - **Requirement:** Git hooks or CI checks must detect code changes without corresponding spec updates and flag for synchronization.
 
+**Acceptance criteria:**
+- A code change touching a specced area without a spec delta is flagged by hook or CI
+- The flag persists until the spec is synchronized or explicitly waived (with recorded reason)
+- Hotfix paths can defer, but not silently skip, synchronization
+
 #### FR-8.2: Retroactive Spec Generation
 
 For existing codebases without specs, the tool must support generating specs from code.
@@ -515,12 +686,22 @@ For existing codebases without specs, the tool must support generating specs fro
 - **Evidence:** OpenSpec's brownfield guidance: "pick something small and real that you were already going to build this week, run `/opsx:explore` on the area you are about to touch so the agent maps how things actually work first."
 - **Requirement:** A command to analyze existing code and generate delta specs for the affected area, not the entire codebase.
 
+**Acceptance criteria:**
+- The command generates delta specs scoped to the named area/files only
+- Generation time and output size scale with the affected area, not the whole repository
+- Generated specs are valid per FR-2.8 without manual repair
+
 #### FR-8.3: Ceremony-Level Migration
 
 Projects must be able to change ceremony level without losing history.
 
 - **Evidence:** specs.md's "start where you are" philosophy: "Use Simple for quick specs, FIRE for rapid execution, or AI-DLC for full methodology. No upgrade path required—each flow is designed for different needs."
 - **Requirement:** Switching from trivial to standard to critical ceremony must preserve all existing artifacts and add only what the new level requires.
+
+**Acceptance criteria:**
+- Changing ceremony level preserves every existing artifact verbatim
+- Only the additional artifacts required by the new level are created
+- No regeneration or rewriting of prior work occurs
 
 #### FR-8.4: Review-Cycle Narrowing on Rejection
 
@@ -544,42 +725,40 @@ Completed and merged changes must be archived automatically, with delta specs me
   - Rejected changes archive with a decision record per FR-2.3
   - Archive is idempotent; re-invocation causes no duplication
 
+#### FR-8.6: Migration Tooling and Pre-Upgrade Checks
+
+Artifact-format changes must ship with automated migrations, and upgrades must be checkable before application.
+
+- **Evidence:** The `superpowers-bridge` documentation warns of version drift: "compatibility baselines of OpenSpec 1.4.1 and Superpowers v5.1.0, while current releases are 1.13.2 and 6.4.1" — combination workflows break silently when components drift; the r1 review requires "predictable updates without breaking changes." (The project-level semantic-versioning commitment is PG-2.)
+- **Requirement:** The tool must provide migration scripts for artifact format changes and a pre-upgrade compatibility check that reports required migrations before they are applied. **Reversibility classes:** migrations that can lose data (format changes that drop or transform content) must be reversible, with reversibility verified by a down-migration test; add-only migrations (introducing new fields/sections) must be idempotent and non-destructive by construction.
+- **Acceptance criteria:**
+  - The pre-upgrade check reports required migrations before applying anything
+  - Data-losing migrations pass a down-migration test before release; add-only migrations are verified idempotent
+  - No artifact format change requires manual file editing
+
 ---
 
-### 9. Project Governance and Maturity
+### 9. Project Governance Commitments (Non-Product Requirements)
 
-#### FR-9.1: Transparent Roadmap and Backward Compatibility
+The following are commitments about how the project producing the tool is run. They are **not functional requirements of the tool itself** and are labeled separately (PG-*) to avoid mixing product and project levels. Product-facing items formerly in this section now live in FR-6.8 (secure marketplace) and FR-8.6 (migration tooling).
 
-The project must publish a roadmap, respond to issues, and maintain backward compatibility within major versions.
+#### PG-1: Transparent Roadmap, Issue Triage, and Deprecation Adherence
 
 - **Evidence:** The r1 review requires a transparent roadmap, regular audits, issue responsiveness, and backward compatibility; the SDD landscape's velocity ("treat the command names as current rather than permanent") makes compatibility guarantees a differentiator for adoption.
-- **Requirement:** Public roadmap; documented issue triage policy; deprecation handled per the unified policy in FR-6.6 (notice at least one minor version ahead, aliases functional through one major version).
-- **Acceptance criteria:**
-  - The roadmap is public and versioned
-  - Deprecated features emit warnings one minor version before removal
-  - The issue triage policy is documented with response-time targets
+- **Commitment:** Publish a public, versioned roadmap; document an issue triage policy with response-time targets; adhere to the unified deprecation policy defined in FR-6.6 (notice at least one minor version ahead, aliases functional through one major version).
+- **How verified:** Roadmap and triage policy are publicly accessible; release history demonstrably follows the deprecation policy.
 
-#### FR-9.2: Versioned Migrations Without Breaking Changes
+#### PG-2: Semantic Versioning
 
-Upgrades must be predictable, with automated migrations where formats change.
+- **Evidence:** The r1 review requires "predictable updates without breaking changes"; FR-8.6's migration tooling depends on a versioning contract to know when migrations apply.
+- **Commitment:** Follow semantic versioning; breaking changes occur only in major versions and always ship with migrations (FR-8.6) and a migration guide (FR-6.6).
+- **How verified:** Release history conforms to semver; no breaking change appears in a minor or patch release.
 
-- **Evidence:** The `superpowers-bridge` documentation warns of version drift: "compatibility baselines of OpenSpec 1.4.1 and Superpowers v5.1.0, while current releases are 1.13.2 and 6.4.1" — combination workflows break silently when components drift; the r1 review requires "predictable updates without breaking changes."
-- **Requirement:** Semantic versioning; migration scripts for artifact format changes; a pre-upgrade compatibility check that reports required migrations before they are applied.
-- **Acceptance criteria:**
-  - The pre-upgrade check reports required migrations before applying them
-  - Migration scripts are idempotent and, where feasible, reversible
-  - Format changes ship with automated migration — no manual artifact editing
+#### PG-3: Community Contribution and Real-World Evidence
 
-#### FR-9.3: Community Contribution, Marketplace, and Security
-
-The project must support community contribution, maintain a secure schema/skill marketplace, and surface real-world adoption examples.
-
-- **Evidence:** OpenSpec's community schema catalog (which lists `superpowers-bridge`) demonstrates the pattern; Spec Kitty's ~1.7k-star adoption with sparse independent review illustrates the cost of weak community evidence. The v1.1 review flags that community skills/schemas are executable content (code and prompts) and require signing, verification, sandboxing, and a review policy.
-- **Requirement:** Public contribution guidelines; a browsable marketplace or registry for community schemas/skills; a curated list of documented production adoptions. **Marketplace security:** items must be cryptographically signed and verified at install (unsigned items refuse to install by default); installs must disclose requested permissions; skills must execute sandboxed with least privilege — no network or filesystem access beyond declared scopes — and scope violations must be blocked and logged; a review policy gates listings.
-- **Acceptance criteria:**
-  - Unsigned marketplace items cannot be installed under default settings
-  - Install-time permission disclosure precedes any grant
-  - Sandbox scope violations are blocked and logged
+- **Evidence:** Spec Kitty's ~1.7k-star adoption with sparse independent review illustrates the cost of weak community evidence; the v1 review requires community influence on development and examples of real implementations.
+- **Commitment:** Maintain public contribution guidelines; curate a list of documented production adoptions; provide channels for community influence on the roadmap.
+- **How verified:** Contribution guidelines exist and are followed; the adoption list contains verifiable cases; roadmap changes reference community input.
 
 ---
 
@@ -606,7 +785,7 @@ The project must support community contribution, maintain a secure schema/skill 
 ### NFR-4: Extensibility
 - Plugin architecture for custom skills, schemas, and integrations
 - Documented API for programmatic interaction
-- Community schema marketplace (per FR-9.3 security requirements)
+- Community schema marketplace (per FR-6.8 security requirements)
 
 ### NFR-5: Lightweight Installation and Startup
 - Installation must not require heavyweight runtimes beyond a single standard package manager
@@ -619,12 +798,13 @@ The project must support community contribution, maintain a secure schema/skill 
 
 ## What This Tool Explicitly Avoids
 
-Based on documented weaknesses across all researched tools and the requirements reviews (r1, v1.1 review):
+Based on documented weaknesses across all researched tools and the requirements reviews (r1, v1.1 review, v1.2 review):
 
 | Avoided Pattern | Source Evidence | Mitigation |
 |---|---|---|
 | Fixed process weight regardless of task size | BMAD "30+ minute workflow for button color"; Spec Kitty "worktree overhead excessive for one-line change" | FR-1.1 ceremony levels |
 | Fixed discipline bundle regardless of task style | Superpowers: "bypass it explicitly for trivia" as the only escape hatch; r1 review requires profiles from vibe to strict | FR-1.4 strictness profiles |
+| Enforcement-vs-ceremony ambiguity | v1.2 review: strict profile demanded drift detection where Trivial skips spec generation — undefined referent, checkpoint contradiction | FR-1.4 precedence rule; FR-1.1 minimal inline artifact |
 | Spec generation without problem understanding | Spec Kitty asking about tech stack before understanding problem (Dilger) | FR-7.1 problem-first elicitation |
 | Markdown file explosion | Spec Kitty "46 markdown files after 20 min" (Dilger) | FR-7.4 artifact volume control |
 | Upfront-completeness demands blocking all work | r1 review: context must build iteratively; Spec Kit's NEEDS CLARIFICATION as the positive pattern | FR-2.10 progressive elaboration |
@@ -632,7 +812,7 @@ Based on documented weaknesses across all researched tools and the requirements 
 | Confirmatory-only review | Superpowers "self-review is confirmatory... does not attempt to break the plan" | FR-3.4 adversarial review |
 | Token burn on simple tasks | Superpowers "burned through all my max plan"; "simple fixes take literally an hour" | FR-5.1 phase budgets, FR-1.1 trivial mode |
 | IDE or vendor lock-in | Kiro "high lock-in risk - Kiro IDE + Claude Sonnet only" | FR-6.1 multi-agent, FR-6.2 repo-native, FR-6.5 IDE-agnostic |
-| Cloud/SaaS lock-in | r1 review: the tool must not dictate a specific cloud; Kiro as the lock-in counter-example | FR-6.7 cloud-agnostic |
+| Cloud/SaaS lock-in or unachievable offline claims | r1 review: the tool must not dictate a specific cloud; v1.2 review: "zero network for full workflow" ignores cloud assistants | FR-6.7 cloud-agnostic (tool ops vs. assistant needs) |
 | Spec-implementation gap | OpenSpec "only checks that artifacts exist, not that code honors them" | FR-2.2 drift detection, FR-3.4 adversarial review |
 | Parallel-change silent conflicts | OpenSpec "one silently dropped the other's scenario" | FR-2.5 conflict classes |
 | No memory of rejected proposals | OpenSpec "nothing tells a future proposal that an idea was already investigated and turned down" | FR-2.3 rejected-proposal memory |
@@ -642,12 +822,15 @@ Based on documented weaknesses across all researched tools and the requirements 
 | Unreliable or ambiguous spec validation | r1 review: "no requirement entries parsed" bug class; `openspec validate` is a single point of failure for CI | FR-2.8 regression suite per failure class |
 | Shared-state conflicts between parallel worktrees | r1 review: `state.yaml` conflicts across parallel agents; Spec Kitty's worktree-per-work-package instability | FR-2.5 Class C conflict handling |
 | Subagents exempt from governance rules | Superpowers bootstrap: "If you were dispatched as a subagent... ignore this skill" | FR-3.3 rule inheritance |
+| Untestable acceptance criteria (design goals posing as AC) | v1.2 review: FR-3.3 AC referenced an Open Question | FR-3.3 measurable AC; document convention "every FR carries AC" |
 | Full-contract re-review on every rejection cycle | Spec Kitty #3925: "each review pass took 12–22 minutes... marginal signal is close to zero" | FR-8.4 review-cycle narrowing with safety valve |
 | Ambiguous command namespaces | OpenSpec: "Why `/opsx:*`?... awkward, hard to remember" | FR-6.6 naming discipline |
-| Inconsistent deprecation policy | v1.1 review: FR-6.6 (one major version) vs FR-9.1 (one minor version) contradiction | FR-6.6 unified policy referenced by FR-9.1 |
-| Silent breakage on component version drift | superpowers-bridge: baselines OpenSpec 1.4.1 / Superpowers v5.1.0 vs. current 1.13.2 / 6.4.1 | FR-9.2 versioned migrations |
+| Inconsistent deprecation policy | v1.1 review: FR-6.6 (one major version) vs FR-9.1 (one minor version) contradiction | FR-6.6 unified policy; adherence via PG-1 |
+| Silent breakage on component version drift | superpowers-bridge: baselines OpenSpec 1.4.1 / Superpowers v5.1.0 vs. current 1.13.2 / 6.4.1 | FR-8.6 migration tooling and pre-upgrade checks |
+| Untestable migration reversibility ("where feasible") | v1.2 review: "where feasible, reversible" is not an AC | FR-8.6 reversibility classes |
 | Hidden telemetry or non-reviewable consent | r1 review: consent must be explicit, stored in repo, visible in review | NFR-3 per-integration opt-in consent |
-| Unsecured community marketplace | v1.1 review: community skills/schemas are executable content requiring signing and sandboxing | FR-9.3 marketplace security |
+| Unsecured community marketplace | v1.1 review: community skills/schemas are executable content requiring signing and sandboxing | FR-6.8 marketplace security |
+| Mixing product requirements with project governance | v1.2 review: former Section 9 conflated tool features with project practices | Section 9 relabeled non-product (PG-1–PG-3); product items moved to FR-6.8, FR-8.6 |
 
 ---
 
@@ -663,7 +846,7 @@ An implementation of these requirements would be successful if:
 
 4. **Adoption friction:** New team onboarding to productive use in <1 day (like specs.md's "Establish an SDD Workflow in One Day" claim, but validated).
 
-5. **Community validation:** ≥1k GitHub stars within 6 months with substantive independent reviews (not just vendor documentation).
+5. **Community validation:** ≥1k GitHub stars within 6 months with substantive independent reviews (not just vendor documentation), and a verifiable adoption list per PG-3.
 
 6. **Modular adoption:** Individual layers can be adopted independently and combined with existing tools (OpenSpec, Superpowers) via bridges without duplicate artifacts — validated by at least two documented production combinations.
 
@@ -683,7 +866,7 @@ These requirements leave several questions unresolved that would need design dec
 
 5. **Cross-repo planning?** OpenSpec's "Stores" feature (beta) addresses planning that spans multiple repos. How essential is this for the ideal tool's initial release?
 
-6. **Rule inheritance without bootstrap cost?** FR-3.3 requires subagents to inherit governance rules, but Superpowers' enforcement mechanism (the always-loaded bootstrap) is exactly what its documentation tells subagents to skip. Can rules be injected into subagent prompts without the recurring token cost of a full bootstrap?
+6. **Rule inheritance without bootstrap cost?** FR-3.3 requires subagents to inherit governance rules, but Superpowers' enforcement mechanism (the always-loaded bootstrap) is exactly what its documentation tells subagents to skip. Can rules be injected into subagent prompts without the recurring token cost of a full bootstrap? (FR-3.3's acceptance criterion requires that no always-loaded bootstrap enter subagent context and that per-task overhead be measured; how to minimize that overhead is this question.)
 
 ---
 
@@ -705,5 +888,6 @@ These requirements leave several questions unresolved that would need design dec
 *Document created: 2026-10-02 (v1)*
 *Revised: 2026-10-02 (v1.1) — merged alternative requirements review r1*
 *Revised: 2026-10-02 (v1.2) — applied machine review of v1.1*
-*Derived from: [spec-tools-research.md](./spec-tools-research.md), requirements review r1, and machine review of v1.1*
+*Revised: 2026-10-02 (v1.3) — applied machine review of v1.2*
+*Derived from: [spec-tools-research.md](./spec-tools-research.md), requirements review r1, and machine reviews of v1.1 and v1.2*
 *Status: Requirements specification for hypothetical ideal tool; not implemented*
