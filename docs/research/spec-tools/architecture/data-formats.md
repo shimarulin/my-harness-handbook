@@ -29,6 +29,7 @@ The tool root is `.sdd/` (directory name, like the tool name, is a placeholder p
   decisions/<shard>/<id>.md      # decision records (FR-4.4)
   missions/<mission-id>/
     record.md                    # live index from mission start; folded at compaction
+                                 #   — post-compaction, a pointer record remains (see below)
   sessions/<shard>/<session-id>.json
   events/
     missions/<mission-id>/log.jsonl
@@ -38,7 +39,7 @@ The tool root is `.sdd/` (directory name, like the tool name, is a placeholder p
   cache/                         # content-digest keyed derived state; gitignored
 ```
 
-**Sharding:** `<shard>` is a two-character prefix of the identifier (ULID prefix), bounding directory sizes. Adequacy at scale is known unknown #1.
+**Sharding:** `<shard>` is a two-character prefix of the identifier (ULID prefix), bounding directory sizes. Adequacy at scale is known unknown #1. `missions/` is deliberately **not** sharded: mission directories are living, near-empty after compaction (they hold only the pointer record), so their count grows slowly and each is transient — unlike the append-only `sessions/` and `decisions/` trees.
 
 **Cache:** derived content only (resolved rule fragments, compiled digests), keyed by content digest (governance-protocol Facet 2, covering FR-5.5 invalidation across all input classes). It is gitignored by default: recoverable, and semantics never depend on it — satisfying FR-6.2's "no tool state outside the repository affects semantics," since a cache hit and a regeneration are indistinguishable in behavior.
 
@@ -86,6 +87,8 @@ ownership:
 
 The mapping is a pure path function (local, offline, deterministic). Non-core homes that cannot be expressed as path functions are not addressable and must not be referenced by core artifacts.
 
+**Mission records under compaction (and under external archiving).** `spec://<repo>/missions/<id>` must resolve for the mission's entire lifetime — before and after compaction. Resolution stays a pure path function via an **alias file**: compaction folds the record into `changes/archive/<date>-<id>/mission-record.md` and leaves a pointer record at the live path (`missions/<id>/record.md` → archive location). This is part of the identifier contract (governance-protocol), not resolver state. Adapter mappings for mission-bearing classes must declare the same guarantee for external homes — the post-archiving path (or a pointer mechanism of the external tool's own) — because external tools perform their own archiving (composition KU #6); a mapping that cannot keep the identifier stable across the external tool's archive step is not a valid mapping.
+
 ## Event log
 
 ### Record schema (JSONL)
@@ -106,7 +109,9 @@ The mapping is a pure path function (local, offline, deterministic). Non-core ho
 ```
 
 - Fields per governance-protocol; `refs` entries are optional per type but, when present, must resolve (link classes above).
+- `mission` is **null-able**: events in the global log (protocol upgrades, kill-switch toggles) carry `mission: null`; per-mission logs require it non-null.
 - `projection.gap` payloads additionally carry the **transition reference** — artifact path and diff identifiers — per the lifecycle contract: resolution is derived at query time by re-matching against the adapter's current signature set; no `.resolved` event type exists.
+- `skill.invoked` payloads carry **`invocation_origin: preemptive | remedial | explicit`** (the decision-origin classification of execution-layers: preemptive = hooks/trigger-list; remedial = gate dispatch on either channel, including runner invocations performed directly in response to a failure payload; explicit = user command or payload-independent configuration) and the skill reference — making the FR-3.1 rate and the NQ-H split reconstructible from the log alone.
 
 ### Atomicity (the tagged requirement from execution-layers)
 
@@ -182,7 +187,7 @@ Headless-capable; exit codes distinguish success, unresolved-evidence, and gate-
 ### Reference corpus (execution-layers Layer 5)
 
 ```
-corpus/
+.sdd/corpus/                      # project-local only: community-contributed cases
   <case-id>/
     task.md            # the task, ceremony level, expected artifacts
     labels.yaml        # [{skill, applicable, rationale}]
@@ -190,6 +195,8 @@ corpus/
 ```
 
 Labeling policy per execution-layers v1.0.1: adversarial, non-author, blind-to-runtime-results; community cases follow the same policy.
+
+**Shipping split.** The **shipped corpus lives in the install directory, not `.sdd/`** — it is tool state, not project state: repository decisions must not mutate shipped ground truth (the FR-6.2 boundary runs both ways). Shipped labels version with the tool version and are replaced on upgrade; project-local community cases are never touched by an upgrade. Measurement runs aggregate both sources and record the corpus composition (shipped version + local case ids) alongside the score, so results stay interpretable across upgrades.
 
 ### Cost report (FR-5.4)
 
@@ -229,5 +236,5 @@ Profiles are the living record for execution-layers KU #1 (two-channel sufficien
 - Final document of the architecture phase: artifact tree, resolution, identity, event-log schema with atomicity, governance/triggering/measurement formats, harness profiles, migration framework
 - Consumes: governance-protocol (identifier contract, session identity, event semantics), composition (ownership declarations, adapter mappings), triggering (formats deferred there), execution-layers (atomicity tag, corpus policy, profile fields)
 - Honors NFR constraints 1–5
-- Version 1.0.0
+- Version 1.0.1: mission-record alias/pointer mechanism (U), adapter mapping stability requirement across external archiving, corpus shipping split (V), `skill.invoked` schema fields (W), null-able mission for global events (X), mission sharding note (Y)
 - Phase complete: architecture set closed (README, governance-protocol, composition, triggering, execution-layers, data-formats)

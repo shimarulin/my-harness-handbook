@@ -14,6 +14,7 @@ Revision 1.1.1 applies the post-acceptance review notes: `spec://` addressabilit
 Revision 1.1.2 refines two wordings from the composition review: `spec://` mission-record resolution semantics (the record exists from mission start as the live index), and the signed-manifest CP formulation (a new normative requirement extending FR-1.4 / touching NFR-3, not a modification of either).
 Revision 1.2.0 closes the event-vocabulary question and adds a detection signal, both from the second composition review: the taxonomy is declared **closed** (core-defined; adapters map to existing types only; extension via protocol versioning), a `projection.gap` event type records query-time classification of unobservable transitions, and the consumer principle (absence of an event is not evidence of absence) is stated for all downstream consumers.
 Revision 1.2.1 refines the consumer principle by emitter class (projected vs. core-emitted), records the `projection.gap` lifecycle (append-only observation, query-time resolution), and states its status as a core-emitted diagnostic relative to the rejected adapter namespace.
+Revision 1.3.0 adds the first planned taxonomy extension since the vocabulary was declared closed: the `skill.invoked` event type (emitted with the invocation record, carrying the `invocation_origin` classification), closing the gap whereby trigger decisions were required to be logged (FR-3.1) while no taxonomy type carried them.
 
 ## Design constraints honored
 
@@ -94,6 +95,7 @@ payload:                    # type-specific structured data
 | `change.archived` | FR-8.5 | spec-tree merge, tracker sync (opt-in) |
 | `unknown.resolved` | FR-2.10 flow | spec update, validation |
 | `projection.gap` | core detection pass (gates, tripwire checks, CI — see composition.md, adapter template #4): a phase-relevant artifact transition matched no declared signature | adapter maintenance, signature-completeness verification (KU #7), observability |
+| `skill.invoked` | any discipline-skill invocation, on all trigger paths (preemptive hooks/trigger-list, remedial gate dispatch — both channels per execution-layers, and explicit) | FR-3.1 / NQ-H metrics, interference classification (triggering) |
 
 **The vocabulary is closed and core-defined.** Adapters (per [`composition.md`](./composition.md)) map external transitions to *existing* core types only and may not declare new event types. Extension happens through protocol versioning: new core types ship in a protocol release, and the ignore-unknown-types rule is what makes such releases backward-compatible for existing consumers. A reserved adapter namespace (`adapter.<vendor>.<type>`) was considered and rejected: events with no core consumer are ceremony under P2, and an adapter-writable log would make the NQ-L audit guarantees dependent on adapter discipline. Consumers subscribe to the defined set and must ignore unknown types (forward compatibility against future protocol versions).
 
@@ -208,7 +210,7 @@ Defining the minimal contract here — rather than in `data-formats.md` — remo
 
 ## Protocol versioning
 
-One semver for both facets; major versions synchronized (NQ-C). Protocol-produced artifacts (event records, manifests, digests) are subject to FR-8.6's migration classes once released; pre-release layout revisions require no migration. Current: **1.2.1** — added the authority model, log structure/compaction, session identity, identifier contract, and gate/trigger separation (1.1.0); wording refinements (1.1.1–1.1.2); closed event vocabulary, `projection.gap` detection type, and the consumer principle (1.2.0); emitter-class refinement of the consumer principle and the `projection.gap` lifecycle (1.2.1). All pre-release; no migration obligations yet.
+One semver for both facets; major versions synchronized (NQ-C). Protocol-produced artifacts (event records, manifests, digests) are subject to FR-8.6's migration classes once released; pre-release layout revisions require no migration. Current: **1.3.0** — added the authority model, log structure/compaction, session identity, identifier contract, and gate/trigger separation (1.1.0); wording refinements (1.1.1–1.1.2); closed event vocabulary, `projection.gap` detection type, and the consumer principle (1.2.0); emitter-class refinement and the `projection.gap` lifecycle (1.2.1); the `skill.invoked` taxonomy extension (1.3.0) — the first addition through the versioning mechanism, backward-compatible via ignore-unknown-types. All pre-release; no migration obligations yet.
 
 ## Governance layer runtime (pluggable)
 
@@ -233,6 +235,7 @@ All three are disableable (P6); the protocol's event log and the core tool-gates
 - Review items 1–8 applied; post-acceptance notes 1–3 applied; composition-review refinements applied (mission-record resolution, signed-manifest CP formulation)
 - Second composition review applied: closed event vocabulary, `projection.gap` detection type, consumer principle
 - Third review round applied: consumer principle split by emitter class; `projection.gap` lifecycle and core-emitted status
+- Final review round applied: `skill.invoked` event type added (first planned taxonomy extension; closes the trigger-decision logging gap)
 - Honors NFR constraints 1–5 (README)
-- Protocol version: 1.2.1 (both facets, synchronized)
+- Protocol version: 1.3.0 (both facets, synchronized)
 - Next document: [`execution-layers.md`](./execution-layers.md) (triggering delivered)

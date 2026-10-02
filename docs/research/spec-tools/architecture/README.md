@@ -57,6 +57,26 @@ The corresponding positive constraint is FR-6.3's acceptance criterion: **one de
   - [x] composition.md — external contract (v1.0.3: adapter/bridge terminology, ownership matrix, adapter template with missing-event disambiguation, documented patterns for OpenSpec and Superpowers, KU #1–7)
   - [x] triggering.md — Q3 mechanisms (v1.0.2: hooks + trigger list + tool-gates, two-channel remedial dispatch, FR-3.1 metric grounded in corpus labels, middleware plugin conditions with listing consequence, harness coexistence)
   - [x] execution-layers.md — FR-3/5/8 realization (v1.0.1: subagent assembly, review-cycle state machine, gate runtime with dispatch and headless classification, atomic emission mechanism, cost reporting, reference corpus with labeling policy, signed-manifest verification)
-  - [x] data-formats.md — Q5 + formats + migrations (v1.0.0: artifact tree, spec:// resolution with link classes, identity allocation, event-log schema with atomicity, governance/triggering/measurement formats, harness profiles, migration framework)
+  - [x] data-formats.md — Q5 + formats + migrations (v1.0.1: artifact tree, spec:// resolution with link classes and mission aliases, identity allocation, event-log schema with atomicity and skill.invoked fields, governance/triggering/measurement formats with corpus shipping split, harness profiles, migration framework)
 
 **Phase status: complete.** All five layer documents plus this README are delivered. Q2–Q6 of the baseline are answered; all deferred design decisions from the change-proposal register are realized or explicitly tracked as known unknowns for field verification. Changes to any document in this set follow the change-proposal process ([../change-proposal-process.md](../change-proposal-process.md)) — architecture documents cite baseline identifiers they realize, so baseline-affecting changes route through CPs, while internal architecture refinements version within this set.
+
+### Register audit (phase-closure verification)
+
+| Register entry | Disposition |
+|---|---|
+| Q2: governance protocol, one contract, two facets | Realized — governance-protocol v1.3.0 (event schema + rule representation; runtime pluggable) |
+| Q3: hooks + trigger list + tool-gate; middleware excluded from core; kill-switch subordination | Realized — triggering v1.0.2 (combo; middleware permitted with four conditions and listing consequence); governance-protocol (gate/trigger separation); execution-layers v1.0.1 (dispatch channels, headless classification) |
+| Q3: 80% single threshold | Realized — triggering v1.0.2 (corpus-label judge; per-harness baselines rejected, no CP required) |
+| NQ-H: preemptive/remedial, observability-only | Realized — triggering v1.0.2; execution-layers v1.0.1 Layer 4; data-formats v1.0.1 (`skill.invoked` + `invocation_origin`) |
+| NQ-A/K: middleware plugin conditions | Realized — triggering v1.0.2 |
+| NQ-B/I: digest keys, resolution-at-assembly | Realized — governance-protocol Facet 2; data-formats (cache, gitignored) |
+| NQ-C: synchronized facet majors | Realized — governance-protocol versioning (v1.3.0: first taxonomy extension) |
+| NQ-D: spec-as-source conditions | Tracked — conditions recorded (independent verification, generated-marking, round-trip + property companion); the mode itself is out of v1 scope by design (baseline includes no spec-as-source mode) |
+| Q5/NQ-E: repo identifier, link classes | Realized — data-formats v1.0.1 |
+| Q6: digest form, injection format | Realized — governance-protocol Facet 2; execution-layers Layer 1 |
+| NQ-F: acknowledgment per-repo | Realized — confirmed 2026-10-02; FR-1.4 wording needs no change (per-repo is a valid reading of "project"); module-reset remains a future CP candidate |
+| FR-8.4 arbitration cadence | Realized — execution-layers Layer 2 (SLA, escalation-pending, deadline arithmetic) |
+| Dialogue decisions beyond the register (NQ-L/P/Q, adapter/bridge Resolution A, consumer principle by emitter class, atomic emission, corpus labeling policy) | Realized — governance-protocol v1.3.0, composition v1.0.3, execution-layers v1.0.1, data-formats v1.0.1 |
+
+No unreferenced register entries remain; the single tracked item (NQ-D) is out-of-scope by design. The phase-complete claim above is verified by this table.
