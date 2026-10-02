@@ -106,11 +106,12 @@ The following are deliberately routed to the architecture document rather than t
 - **Spec-as-source conditions**: independent verification, generated-artifact marking, round-trip plus a property-test companion derived from the spec (Q4, NQ-D)
 - **Spec-tree format**: repo-identifier addressability to avoid a future cross-repo breaking change; link classes broken vs unresolvable (Q5, NQ-E)
 - **Rule-injection format**: digest-form governance inheritance, resolution-at-assembly, content-digest cache keys (which subsume FR-5.5 invalidation for configuration inputs) (Q6, NQ-B, NQ-I)
-- **Acknowledgment scope**: "project" in FR-1.4 recommended as per-repository (pending confirmation, NQ-F); path-scoped acknowledgment and module-level reset via FR-2.9 override are future CP candidates
+- **Acknowledgment scope**: "project" in FR-1.4 confirmed as per-repository (NQ-F, confirmed 2026-10-02): the vibe+Critical acknowledgment is policy acceptance at project level — recorded once in repository configuration (FR-6.2) and inherited by all modules; teams with stricter per-module risk appetites select stricter profiles per-task (FR-1.4) rather than re-acknowledging. Path-scoped acknowledgment and module-level reset via FR-2.9 override remain future CP candidates, relevant mainly to monorepos with strong module autonomy. Staleness on team turnover is a documented v1 limitation
 - **Arbitration cadence**: re-notification without upper bound for v1; escalation-pending state observable via FR-4.2 (review item 2.3, accepted as-is)
 
 ## Status
 
 - Baseline: v2.0, frozen 2026-10-02
 - Open CPs: none
+- Deferred decisions confirmed: acknowledgment scope = per-repository (NQ-F, 2026-10-02)
 - Next fold revision: unscheduled
