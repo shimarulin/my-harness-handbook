@@ -57,14 +57,18 @@ implement → review(cycle-1: full contract)
 
 ### Gates as evidence checks
 
-Every gate (FR-2.2 drift, FR-3.2 TDD, FR-8.4 cycle, FR-8.6 pre-upgrade) is tool code checking named evidence — never skill invocations (gate/trigger separation). A gate's verdict is a **core-emitted event committed atomically with its decision record**.
+Every gate is tool code checking named evidence — never skill invocations (gate/trigger separation). The normative gates: **FR-2.2** drift, **FR-3.2** TDD, **FR-3.3** inheritance verification (Layer 1), **FR-4.1** unresolved-decision blocking, **FR-8.4** cycle rules, **FR-8.6** pre-upgrade — the list is non-exhaustive; any tool-side check of named evidence that decides whether a step passes is a gate. A gate's verdict is a **core-emitted event committed atomically with its decision record**.
+
+**Atomic emission mechanism.** "Committed atomically" means: **one git commit carries both the artifact change and the appended event record.** Git is the transaction — no write-ahead log, no separate transactional machinery. Per-mission logs are single-writer by construction (FR-5.3 worktree isolation gives each mission its own worktree); the global log's rare concurrent writes (protocol upgrades, kill-switch toggles) resolve as ordinary git merges. The physical record schema is defined in [data-formats.md](./data-formats.md) under the atomicity requirement recorded here.
 
 ### The dispatch mechanism (KU #6 resolved)
 
 A two-channel dispatch, with the split chosen so that a channel exists in every context where gates run:
 
-1. **Interactive channel (agent-present contexts).** The gate injects the remedial request into the session's next-turn context — same injection path as the trigger list (triggering, mechanism 2): a compact, match-conditioned block naming the blocked evidence and the producing skill. Delivery is guaranteed because the gate controls the tool-side injection point; the agent then invokes the skill through the harness's native grammar. This is the universal channel for interactive harnesses (FR-6.1) and requires no hook surface.
+1. **Interactive channel (agent-present contexts).** The gate injects the remedial request into the session's next-turn context — a **tool-side mid-session injection**, distinct from the always-loaded trigger list (which is ambient metadata the agent reads): a compact block naming the blocked evidence and the producing skill. Delivery is guaranteed because the gate controls the tool-side injection point; the agent then invokes the skill through the harness's native grammar. This is the universal channel for interactive harnesses (FR-6.1) and requires no hook surface.
 2. **Headless channel (CI/agent-absent contexts).** No agent context exists to inject into. The gate **fails the step with a remedial exit code** and a structured failure payload naming the evidence and skill. Remedial invocation is then performed by whatever runner invokes the tool (CI job, pre-commit hook) — our command surface exposes `run <skill>` headlessly. The "may dispatch" of triggering.md v1.0.0 resolves to: *interactive contexts get guaranteed in-session dispatch; headless contexts get guaranteed failure-plus-command, and the backstop guarantee is that the step does not pass — which was always the core claim.*
+
+**Headless classification (FR-3.1 / NQ-H).** Invocations are classified by **decision origin** — who decided the skill was applicable. In both channels, that is the gate: interactively via injection, headlessly via the failure payload naming evidence and skill. A runner invocation performed *directly in response to the payload* (running the named skill) is a dumb executor of the gate's decision: it counts as **remedial auto-triggered**. An invocation configured independently of the payload is **explicit** — configuration is the nearest analogue of a user command in FR-3.1's terms. This keeps the metric well-defined in CI environments, where gates do most of their work.
 
 **Loop bound (per FR-8.4 cycle):** one dispatch per gate blocking per review cycle; persistent failure escalates (FR-3.6 interrupt or FR-8.4 rejection), never retries.
 
@@ -86,7 +90,8 @@ Reports are derived from the event log + manifests (artifacts primary, NQ-L) at 
 
 The corpus is the ground-truth judge for the primary metric (triggering v1.0.1):
 
-- **Composition:** a set of representative tasks per ceremony level (trivial/standard/critical), each with **ground-truth labels of which skills are applicable** — labeled at authoring time by the corpus maintainers, reviewed like any artifact (FR-6.2).
+- **Composition:** a set of representative tasks per ceremony level (trivial/standard/critical), each with **ground-truth labels of which skills are applicable**.
+- **Labeling policy (independence control).** Authorship of labels by corpus maintainers is permitted (an independent labeler does not know our skills), but every label passes **adversarial review by a non-author of the corresponding skill** (rotation), **blind to runtime results** — label review happens before or independently of measurement runs, so the reviewer never sees what "should have" triggered. Community-contributed cases carry contributor labels through the same policy, which is what gradually widens independence beyond the maintainer team. Labels and their reviews are versioned artifacts (FR-6.2).
 - **Measurement:** run the corpus per harness; score auto-trigger rate as *correctly-triggered applicable invocations without explicit user command, judged by corpus labels*; report the preemptive/remedial split alongside (no target in v1).
 - **Sizing:** enough tasks per harness class to make the 80% threshold meaningful — exact count is corpus-maintainer judgment; the initial corpus ships with the tool, grows via community contribution, and its labels are themselves versioned artifacts.
 - **Known unknown #2 (this document):** corpus representativeness for real-world task distributions — the gap between curated tasks and organic work is exactly what field data must measure.
@@ -111,16 +116,18 @@ Interrupt triggers are evaluated tool-side at the same invocation points as gate
 - Injection-block format (channel 1) and `run <skill>` command grammar
 - Cost-report artifact format
 - Harness integration profiles recording channel-1 injection-point availability (known unknown #1)
+- Event-log record schema and the physical atomicity discipline (single-commit, per the atomic emission mechanism above; tagged as an atomicity requirement for data-formats.md)
 
 ## Known unknowns (this document)
 
 1. **Two-channel sufficiency:** whether every interactive harness exposes a tool-controllable injection point for channel 1 (recorded per harness in FR-6.1 integration profiles).
 2. **Corpus representativeness:** the gap between curated corpus tasks and organic work distributions.
 3. **SLA cadence defaults:** the 72h arbitration SLA and re-notification cadence need field calibration.
+4. **Labeling independence (epistemic):** the adversarial non-author blind-review policy is process control, not epistemic independence — the long-term validation is the accumulating share of externally authored corpus cases, which field data must track.
 
 ## Status
 
 - Realizes FR-3.x, FR-5.x, FR-8.x; resolves triggering KU #6 (dispatch) and the atomic-emission condition; delivers the reference corpus and the signed-manifest verification mechanism
 - Honors NFR constraints 1–5
-- Version 1.0.0
+- Version 1.0.1: injection-path wording corrected (mid-session tool-side injection, not the trigger-list path); gate enumeration extended (FR-3.3, FR-4.1; non-exhaustive); headless classification by decision origin; atomic emission mechanism specified (single git commit); corpus labeling policy (adversarial, non-author, blind) with KU #4 registered
 - Next document: `data-formats.md` (final)

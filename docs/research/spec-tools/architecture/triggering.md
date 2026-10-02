@@ -63,7 +63,7 @@ This is where triggering and compliance meet: the gate does not trust the skill,
 
 ## Metrics
 
-- **Primary (FR-3.1):** auto-trigger rate over the reference corpus — the fraction of applicable skill invocations occurring without an explicit user command, **where "applicable" is judged by corpus ground-truth labels, not by our runtime predicates** (a predicate-judged rate is self-graded: an always-on predicate scores 100% on itself). Runtime predicate logs serve as debugging evidence, never as the score. This also keeps the rate comparable with external measurements (MCP.Directory's Superpowers evaluation, Superpowers' own v6 evals), which counted invocations against external controls. Target ≥80%, single threshold, all harnesses.
+- **Primary (FR-3.1):** auto-trigger rate over the reference corpus — the fraction of applicable skill invocations occurring without an explicit user command, **where "applicable" is judged by corpus ground-truth labels, not by our runtime predicates** (a predicate-judged rate is self-graded: an always-on predicate scores 100% on itself). Runtime predicate logs serve as debugging evidence, never as the score. This removes the main obstacle to comparability with external measurements (MCP.Directory's Superpowers evaluation, Superpowers' own v6 evals); full comparability additionally requires matching their counting methodology, which is a corpus-maintenance duty tracked alongside execution-layers KU #2. Target ≥80%, single threshold, all harnesses.
 - **Secondary (NQ-H, observability-only in v1):** the preemptive/remedial split, reported per mission in cost reports (FR-5.4). No target in v1 — a number set before the corpus baseline exists is either gamified or dead letter. The corpus run establishes the baseline; setting a target afterward is a CP (it adds an acceptance criterion to FR-3.1).
 - **Audit trail:** trigger decisions are logged (FR-3.1 AC) — core-emitted, hence authoritative about our invocations; this log is the artifact basis for interference classification below.
 
@@ -73,7 +73,7 @@ Middleware/proxy inspection of assistant traffic is **not part of the core combo
 
 1. Disabled by default.
 2. Subordinate to the kill switch (NFR-3): disabling it removes only the plugin's contribution; the core combo is unaffected.
-3. Privacy analysis against NFR-2 (local-first) before marketplace listing: a cloud-hosted middleware is a direct violation; a local one requires data-handling analysis of the sensitive-content observation point (prompts, code, specs).
+3. Privacy analysis against NFR-2 (local-first) before marketplace listing: a cloud-hosted middleware is a direct violation; a local one requires data-handling analysis of the sensitive-content observation point (prompts, code, specs). **A failed analysis blocks the listing** (per FR-6.8's review policy); the plugin remains usable only from source, by explicit user action.
 4. Security disclosure of the observation surface — what traffic it inspects, what it retains — extending FR-6.8's permission/scope-disclosure machinery to the listing.
 
 ## Harness coexistence (composition KU #4)
@@ -91,7 +91,7 @@ When our skills coexist with external skill sets (e.g., Superpowers installed al
 3. **Cross-fire behavior and doubled ambient cost** (inherited from composition KU #4).
 4. **Remedial-bound calibration:** whether one dispatch per gate per cycle is the right bound.
 5. **Trigger-list vs. coexistence budget:** the interaction between our always-loaded list and external skill sets' metadata under a shared context ceiling.
-6. **Gate-to-skill dispatch mechanism:** the reliable cross-harness channel by which a blocked gate delivers the remedial invocation — command surface, hooks where present, or an internal path — with CI/headless contexts as the hard case. Resolved in [execution-layers.md](./execution-layers.md), which owns the gate runtime.
+6. **Gate-to-skill dispatch mechanism:** the reliable cross-harness channel by which a blocked gate delivers the remedial invocation — command surface, hooks where present, or an internal path — with CI/headless contexts as the hard case. **Status: resolved** in [execution-layers.md](./execution-layers.md) via the two-channel split (interactive injection + headless failure-and-command); the residual — per-harness injection-point availability — is KU #1 there.
 
 ## Deferred
 
@@ -104,4 +104,5 @@ When our skills coexist with external skill sets (e.g., Superpowers installed al
 - Answers Q3; records NQ-A/K/H mechanisms; inherits the consumer principle (emitter classes) and the gate/trigger separation
 - Honors NFR constraints 1–5 (README)
 - Version 1.0.1: NFR-2 misreference fixed (middleware condition 3), primary metric grounded in corpus ground-truth labels, KU #6 (gate-to-skill dispatch) registered, remedial bound anchored to the FR-8.4 cycle, predicate semantics stated per carrier mechanism
+- Version 1.0.2: comparability claim softened (methodology matching as corpus-maintenance duty), KU #6 marked resolved with residual pointer, privacy-analysis consequence stated (blocks listing)
 - Next document: `execution-layers.md`
