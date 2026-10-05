@@ -1,5 +1,43 @@
 # 02 — Multi-Agent Orchestration & Subagent Patterns
 
+## dcode Dynamic Subagents
+
+**Source**: [Deep Agents Code docs](https://docs.langchain.com/oss/deepagents/code/subagents) +
+[Dynamic Subagents docs](https://docs.langchain.com/oss/javascript/deepagents/dynamic-subagents)
+
+dcode ships with the **QuickJS code interpreter enabled**, so dynamic subagents
+work out of the box. Instead of the main agent calling `task()` for each
+subagent sequentially, it writes an orchestration script that calls the
+built-in `task()` global and runs it in the code interpreter.
+
+**Trigger**: Ask for a "workflow". Example: "Run a workflow to review every
+file in src/ for SQL injection."
+
+**Visualization**: As subagents spawn, dcode shows them live in the dynamic
+subagents panel, grouped into phases by dispatch.
+
+**AGENTS.md limitations**: Custom subagents defined via `AGENTS.md` support
+only `name`, `description`, and `model` in YAML frontmatter. Fields like
+`tools`, `middleware`, `interrupt_on`, and `skills` are **not configurable**
+via `AGENTS.md` — subagents inherit the main agent's tools. For full control,
+use the SDK directly (`create_deep_agent()` in Python or `createDeepAgent()`
+in JavaScript).
+
+**ACP integration**: Dynamic subagents can be used in the coding agent of
+your choice over ACP (Agent Client Protocol) — for example, Zed.
+
+**Cost-efficient routing**: Use a cheaper model for simple delegation while
+keeping the main agent on a more capable model:
+
+```yaml
+---
+name: general-purpose
+description: General-purpose agent for research and multi-step tasks
+model: anthropic:claude-haiku-4-5-20251001
+---
+You are a general-purpose assistant. Complete the task efficiently.
+```
+
 ## Problem Statement
 
 Standard terminal agents implement "hub-and-spoke": main agent calls subagent,

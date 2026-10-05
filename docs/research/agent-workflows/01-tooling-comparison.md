@@ -161,6 +161,113 @@ TypeScript extensions without framework abstractions.
 
 ## Sources
 
+### Pi
+- [Pi — Ollama Docs](https://docs.ollama.com/integrations/pi) — Official Ollama integration guide
+
+### Deep Agents Code
+- [Deep Agents Monorepo](https://github.com/langchain-ai/deepagents) — GitHub
+- [Deep Agents Code — Docs](https://docs.langchain.com/oss/deepagents/code/overview) — LangChain
+- [Dynamic Subagents](https://docs.langchain.com/oss/javascript/deepagents/dynamic-subagents) — LangChain docs
+- [Subagents in dcode](https://docs.langchain.com/oss/deepagents/code/subagents) — AGENTS.md format and limitations
+- [ACP Integration](https://github.com/langchain-ai/deepagents/blob/main/libs/acp/README.md) — Agent Client Protocol
+
+### Open SWE
+- [Open SWE: Framework for Internal Coding Agents](https://www.langchain.com) — LangChain
+
+### pydantic-deep (Self-Hosted Claude Code Alternative)
+- [pydantic-deep — PyPI](https://pypi.org/project/pydantic-deep/) — Package
+- [vstorm-co/pydantic-deepagents — GitHub](https://github.com/vstorm-co/pydantic-deepagents) — Source
+- [Live Run Forking](https://vstorm-co.github.io/pydantic-deepagents/advanced/forking) — Unique feature docs
+- [Production Deep Agents for Pydantic AI](https://pydantic.dev/articles/pydantic-deep-agents) — Vstorm announcement
+
+### DeterminAgent (Zero-Cost Multi-Agent Orchestration)
+- [Experto-AI/determinagent — GitHub](https://github.com/Experto-AI/determinagent) — Source
+- [determinagent — PyPI](https://pypi.org/project/determinagent) — Package
+
+### owenloop (Deterministic Rails)
+- [owenloop — npm](https://www.npmjs.com/package/owenloop) — Package
+
+### OpenCode
+- [OpenCode — GitHub](https://github.com/anomalyco/opencode) — Source
+
+### Comparison Articles
+- [Pi vs OpenCode: After 100 Hours](https://composio.dev/content/pi-vs-opencode) — Composio
+- [Pi.dev Package Catalog](https://pi.dev/packages)
+- [OpenCode: 8M Users, 172K Stars](https://stackfutures.com/blog/opencode-8m-users-172k-stars-coding-agents) — StackFutures
+- [Pi Agent Harness](https://explainx.ai) — ExplainX
+- [The New Agent Harnesses, Compared (2024–2026)](https://phoson.lat) — Phoson
+
+## Additional Tools
+
+### pydantic-deep
+
+**What**: Self-hosted terminal AI assistant and Python framework, built on Pydantic AI by Vstorm.
+
+**Repository**: [vstorm-co/pydantic-deepagents](https://github.com/vstorm-co/pydantic-deepagents)
+**PyPI**: [pydantic-deep](https://pypi.org/project/pydantic-deep)
+
+**Key features**:
+- `create_deep_agent()` — one function to create an agent
+- Planning, file editing, command execution, search, memory, subagents, MCP
+- **Live Run Forking** — split a running agent into parallel isolated branches,
+  each trying a different approach, then use AI judge or test results to pick
+  the winner. "No other agent framework has this."
+- Copy-on-write file overlay for branch isolation
+- 100% type-safe, MIT license
+- Docker sandboxing, per-tool approval gates
+
+**Unique advantage**: Live Run Forking. From [docs](https://vstorm-co.github.io/pydantic-deepagents/advanced/forking):
+> "Live Run Forking splits a running agent into multiple parallel branches
+> that share the same conversation history up to the fork point, then explore
+> different approaches in isolation."
+
+### DeterminAgent
+
+**What**: Python library for orchestrating CLI agents (Claude Code, Copilot CLI,
+Gemini CLI, OpenAI Codex) through LangGraph.
+
+**Repository**: [Experto-AI/determinagent](https://github.com/Experto-AI/determinagent)
+**PyPI**: [determinagent](https://pypi.org/project/determinagent)
+
+**Key features**:
+- Deterministic pipelines on LangGraph state machines
+- Uses existing flat-rate subscriptions (zero variable cost)
+- `leaf_agent()` — delegating tasks in isolated context
+- Zero-latency local tool control via subprocess
+- Library-only: full control in pure Python, no proprietary YAML DSL
+
+**Use case**: When you already pay for Claude Code / Copilot / Gemini CLI
+subscriptions and want to orchestrate them in deterministic pipelines without
+additional per-token API costs.
+
+### owenloop
+
+**What**: Deterministic rails for agentic workflows. "Replacement of hope
+with guarantees."
+
+**npm**: [owenloop](https://www.npmjs.com/package/owenloop)
+
+**Key features**:
+- Declarative step and dependency description in YAML
+- Engine guarantees order: step runs only when all dependencies are complete
+- On result change: everything dependent is invalidated and redone
+- Failed step stops and flags for human
+- Artifact judges — independent quality assessors
+- Append-only audit with SHA-256 chain
+
+### ACP (Agent Client Protocol)
+
+**What**: JSON-RPC-based interface over stdio or HTTP, originated by Zed
+Industries, jointly maintained with JetBrains. Enables coding agents to
+run inside editors and IDEs.
+
+**Repository**: [zed-industries/agent-client-protocol](https://github.com/zed-industries/agent-client-protocol)
+
+**dcode integration**: `dcode --acp` enables running dcode inside Zed,
+JetBrains, VS Code, Neovim.
+
+**Source**: [ACP — VS Code Extension](https://marketplace.visualstudio.com) +
+[Agent Client Protocol concepts](https://blog.dsalathe.dev)
 - [Pi vs OpenCode: After 100 Hours](https://composio.dev/content/pi-vs-opencode) — Composio, Aug 2026
 - [Pi.dev Package Catalog](https://pi.dev/packages)
 - [langchain-ai/deepagents](https://github.com/langchain-ai/deepagents) — GitHub

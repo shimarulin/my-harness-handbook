@@ -13,6 +13,7 @@ for building reliable agent-based development systems.
 | [03-deterministic-workflows.md](03-deterministic-workflows.md) | Workflows vs agents, deterministic orchestration, token economics |
 | [04-methodologies.md](04-methodologies.md) | SDD, Proof-or-Stop, CIV, TDD-first — portable methodology layer |
 | [05-implementation-guide.md](05-implementation-guide.md) | Practical implementation on Pi + Deep Agents Code |
+| [06-additional-tools.md](06-additional-tools.md) | pydantic-deep, DeterminAgent, owenloop, ACP — complementary tools |
 
 ## Executive Summary
 
